@@ -7,8 +7,19 @@ export async function GET(req: NextRequest) {
     await connectDB();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const month = searchParams.get("month"); // e.g. "2024-04"
 
-    const transactions = await Transaction.find({ userId }).sort({ date: -1 });
+    const query: any = { userId };
+
+    // If month filter is provided, filter by that month
+    if (month) {
+        const start = new Date(`${month}-01`);
+        const end = new Date(start);
+        end.setMonth(end.getMonth() + 1);
+        query.date = { $gte: start, $lt: end };
+    }
+
+    const transactions = await Transaction.find(query).sort({ date: -1 });
     return NextResponse.json(transactions);
 }
 
