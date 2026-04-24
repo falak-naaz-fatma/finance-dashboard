@@ -29,7 +29,8 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
     const fetchTransactions = async () => {
         setLoading(true);
         try {
-            const userId = (session?.user as any)?.id;
+            // const userId = (session?.user as any)?.id;
+            const userId = "test123";
             // Add month to query if selected
             const url = `/api/transactions?userId=${userId}${selectedMonth ? `&month=${selectedMonth}` : ""
                 }`;

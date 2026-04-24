@@ -23,7 +23,8 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const userId = (session?.user as any)?.id;
+                // const userId = (session?.user as any)?.id;
+                const userId = "test123";
                 const res = await fetch(`/api/transactions?userId=${userId}`);
                 const transactions = await res.json();
 

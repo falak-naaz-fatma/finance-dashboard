@@ -9,7 +9,9 @@ let cached = (global as any).mongoose || { conn: null, promise: null };
 export async function connectDB() {
     if (cached.conn) return cached.conn;
 
-    cached.promise = cached.promise || mongoose.connect(MONGODB_URI);
+    cached.promise = cached.promise || mongoose.connect(MONGODB_URI, {
+        dbName: "finance-dashboard",
+    });
     cached.conn = await cached.promise;
     return cached.conn;
 }

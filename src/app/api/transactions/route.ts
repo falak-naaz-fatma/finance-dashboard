@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET all transactions
 export async function GET(req: NextRequest) {
     await connectDB();
+    console.log("DB Connected");
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
     const month = searchParams.get("month"); // e.g. "2024-04"
@@ -26,6 +27,7 @@ export async function GET(req: NextRequest) {
 // POST new transaction
 export async function POST(req: NextRequest) {
     await connectDB();
+    console.log("DB Connected");
     const body = await req.json();
     const transaction = await Transaction.create(body);
     return NextResponse.json(transaction, { status: 201 });
