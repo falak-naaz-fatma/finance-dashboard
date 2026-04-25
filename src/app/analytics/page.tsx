@@ -9,15 +9,14 @@ import {
   CalendarDays,
   ClipboardList,
   LayoutDashboard,
-  LogOut,
   PiggyBank,
   Search,
-  Settings,
   Sun,
   Target,
   TrendingUp,
   WalletCards,
 } from "lucide-react";
+import UserMenu from "@/components/UserMenu";
 import { ResponsiveContainer as ChartContainer, Tooltip as ChartTooltip } from "recharts";
 import {
   CartesianGrid as ReCartesianGrid,
@@ -54,8 +53,7 @@ const navItems = [
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3, active: true },
   { label: "Budget", href: "/budget", icon: Target },
-  { label: "Savings Goals", href: "#", icon: PiggyBank },
-  { label: "Settings", href: "#", icon: Settings },
+  { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 const categoryIcon: Record<string, string> = {
@@ -245,25 +243,6 @@ export default function AnalyticsPage() {
             );
           })}
         </nav>
-
-        <div className="m-4 flex items-center justify-between rounded-[14px] border border-white/10 bg-white/[0.04] p-3">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#7657ff] to-[#c052f4] text-sm font-semibold">
-              {initials}
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">{userName}</p>
-              <p className="truncate text-sm text-zinc-400">{userEmail}</p>
-            </div>
-          </div>
-          <button
-            onClick={() => signOut()}
-            className="rounded-lg p-2 text-zinc-400 transition hover:bg-white/10 hover:text-white"
-            title="Logout"
-          >
-            <LogOut className="size-4" />
-          </button>
-        </div>
       </aside>
 
       <div className="lg:pl-[280px]">
@@ -284,9 +263,7 @@ export default function AnalyticsPage() {
               <button className="rounded-full p-2 text-zinc-200 transition hover:bg-white/10" title="Theme">
                 <Sun className="size-5" />
               </button>
-              <div className="flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-[#7657ff] to-[#c052f4] font-semibold">
-                {initials}
-              </div>
+              <UserMenu userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
             </div>
           </div>
         </header>
