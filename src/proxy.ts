@@ -15,6 +15,18 @@ export async function proxy(request: NextRequest) {
         request.nextUrl.pathname.startsWith("/analytics") ||
         request.nextUrl.pathname.startsWith("/budget");
 
+    const isRoot = request.nextUrl.pathname === "/";
+
+    // If visiting root (/), redirect based on auth status
+    if (isRoot) {
+        if (isLoggedIn) {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        } else {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+    }
+
+    // If not logged in and visiting protected route, go to login
     if (isProtectedRoute && !isLoggedIn) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -23,5 +35,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/transactions/:path*", "/analytics/:path*", "/budget/:path*"],
+    matcher: ["/", "/dashboard/:path*", "/transactions/:path*", "/analytics/:path*", "/budget/:path*"],
 };
