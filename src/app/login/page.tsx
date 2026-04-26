@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -130,6 +131,13 @@ export default function LoginPage() {
                             {isSubmitting ? "Logging in..." : "Login"}
                         </Button>
                     </form>
+
+                    <p className="mt-4 text-center text-sm text-zinc-400">
+                        Don't have an account?{" "}
+                        <Link href="/register" className="font-medium text-[#8b5cf6] hover:underline">
+                            Sign Up
+                        </Link>
+                    </p>
 
                     <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
