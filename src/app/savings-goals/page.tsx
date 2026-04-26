@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { useState, type ComponentType, type FormEvent } from "react";
 import {
   BarChart3,
   Bell,
@@ -17,6 +18,7 @@ import {
   Sun,
   Target,
   WalletCards,
+  X,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
 
@@ -34,7 +36,8 @@ type Goal = {
   dueLabel: string;
   saved: number;
   target: number;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: ComponentType<{ className?: string }>;
+  emoji?: string;
 };
 
 const goals: Goal[] = [
@@ -144,7 +147,7 @@ function GoalCard({ goal }: { goal: Goal }) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
           <div className="flex size-12 items-center justify-center rounded-[14px] bg-gradient-to-br from-[#7657ff] to-[#c052f4] shadow-[0_0_26px_rgba(139,92,246,0.18)]">
-            <Icon className="size-5 text-white" />
+            {Icon ? <Icon className="size-5 text-white" /> : <span className="text-xl leading-none">{goal.emoji}</span>}
           </div>
           <div>
             <h2 className="text-lg font-semibold leading-tight text-white">{goal.title}</h2>
@@ -178,10 +181,50 @@ function GoalCard({ goal }: { goal: Goal }) {
 
 export default function SavingsGoalsPage() {
   const { data: session } = useSession();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [goalList, setGoalList] = useState(goals);
+  const [emoji, setEmoji] = useState("\uD83C\uDFAF");
+  const [goalName, setGoalName] = useState("");
+  const [targetAmount, setTargetAmount] = useState("");
 
   const userName = session?.user?.name || "Aarav Sharma";
   const userEmail = session?.user?.email || "aarav@fintrack.io";
   const initials = getInitials(userName, userEmail) || "AS";
+
+  function resetCreateForm() {
+    setEmoji("\uD83C\uDFAF");
+    setGoalName("");
+    setTargetAmount("");
+  }
+
+  function closeCreateGoal() {
+    setIsCreateOpen(false);
+    resetCreateForm();
+  }
+
+  function handleCreateGoal(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const parsedTarget = Number(targetAmount);
+
+    if (!goalName.trim() || !Number.isFinite(parsedTarget) || parsedTarget <= 0) {
+      return;
+    }
+
+    setGoalList((currentGoals) => [
+      {
+        id: `${Date.now()}-${goalName.trim().toLowerCase().replace(/\s+/g, "-")}`,
+        title: goalName.trim(),
+        dueLabel: "No due date",
+        saved: 0,
+        target: parsedTarget,
+        emoji: emoji.trim() || "\uD83C\uDFAF",
+      },
+      ...currentGoals,
+    ]);
+
+    closeCreateGoal();
+  }
 
   return (
     <div className="min-h-screen bg-[#07080d] text-white">
@@ -246,19 +289,93 @@ export default function SavingsGoalsPage() {
               <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Savings Goals</h1>
               <p className="mt-2 text-sm font-normal text-zinc-400">Track progress toward what matters</p>
             </div>
-            <button className="inline-flex h-10 items-center gap-2 rounded-[14px] bg-gradient-to-r from-[#7657ff] to-[#c052f4] px-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(139,92,246,0.25)] transition hover:brightness-110">
+            <button
+              type="button"
+              onClick={() => setIsCreateOpen(true)}
+              className="inline-flex h-10 items-center gap-2 rounded-[14px] bg-gradient-to-r from-[#7657ff] to-[#c052f4] px-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(139,92,246,0.25)] transition hover:brightness-110"
+            >
               <Plus className="size-4" />
               Add Goal
             </button>
           </section>
 
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {goals.map((goal) => (
+            {goalList.map((goal) => (
               <GoalCard key={goal.id} goal={goal} />
             ))}
           </section>
         </main>
       </div>
+
+      {isCreateOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.78] px-4 py-6 backdrop-blur-[1px]">
+          <form
+            onSubmit={handleCreateGoal}
+            className="flex w-full max-w-[640px] flex-col overflow-hidden rounded-[16px] border border-white/15 bg-[#090a0f] shadow-[0_28px_90px_rgba(0,0,0,0.65)]"
+          >
+            <div className="flex items-center justify-between gap-4 px-7 pt-7">
+              <h2 className="text-xl font-semibold leading-tight text-white">Create a savings goal</h2>
+              <button
+                type="button"
+                onClick={closeCreateGoal}
+                className="rounded-full p-1.5 text-zinc-300 transition hover:bg-white/10 hover:text-white"
+                title="Close"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <div className="space-y-5 px-7 py-7">
+              <label className="block">
+                <span className="mb-2 block text-sm font-semibold text-white">Emoji</span>
+                <input
+                  value={emoji}
+                  onChange={(event) => setEmoji(event.target.value)}
+                  aria-label="Goal emoji"
+                  className="h-[58px] w-full rounded-[16px] border border-[#8b5cf6] bg-[#101116] px-4 text-lg text-white outline-none transition placeholder:text-zinc-500 focus:border-[#a78bfa] focus:ring-4 focus:ring-[#8b5cf6]/45"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-sm font-semibold text-white">Goal Name</span>
+                <input
+                  value={goalName}
+                  onChange={(event) => setGoalName(event.target.value)}
+                  placeholder="e.g. New Laptop"
+                  className="h-[50px] w-full rounded-[14px] border border-white/15 bg-[#090a0f] px-4 text-base text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/80 focus:ring-4 focus:ring-[#8b5cf6]/15"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-sm font-semibold text-white">Target Amount</span>
+                <input
+                  value={targetAmount}
+                  onChange={(event) => setTargetAmount(event.target.value)}
+                  inputMode="numeric"
+                  placeholder="100000"
+                  className="h-[50px] w-full rounded-[14px] border border-white/15 bg-[#090a0f] px-4 text-base text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/80 focus:ring-4 focus:ring-[#8b5cf6]/15"
+                />
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-3 border-t border-white/10 bg-[#090a0f] px-7 py-7">
+              <button
+                type="button"
+                onClick={closeCreateGoal}
+                className="h-12 rounded-[12px] border border-white/15 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="h-12 rounded-[12px] bg-gradient-to-r from-[#7657ff] to-[#c052f4] px-6 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(139,92,246,0.28)] transition hover:brightness-110"
+              >
+                Create Goal
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : null}
     </div>
   );
 }
