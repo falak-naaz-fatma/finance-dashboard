@@ -83,14 +83,14 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const categories = selectedType === "income" ? incomeCategories : expenseCategories;
 
   return (
-    <Card className="rounded-[8px] border border-white/10 bg-[#15161f]/90 py-7 shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
+    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
       <CardHeader className="px-8">
         <CardTitle className="text-lg font-semibold">Add Transaction</CardTitle>
-        <p className="text-sm font-normal text-zinc-400">Track a new income or expense</p>
+        <p className="text-sm font-normal text-muted-foreground">Track a new income or expense</p>
       </CardHeader>
       <CardContent className="px-8">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          <div className="grid rounded-[14px] bg-white/[0.04] p-1 sm:grid-cols-2">
+          <div className="grid rounded-[14px] bg-muted p-1 sm:grid-cols-2">
             {(["income", "expense"] as const).map((type) => (
               <button
                 key={type}
@@ -100,13 +100,12 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                   setValue("type", type);
                   setValue("category", "");
                 }}
-                className={`h-11 rounded-[12px] text-base font-semibold capitalize transition ${
-                  selectedType === type
+                className={`h-11 rounded-[12px] text-base font-semibold capitalize transition ${selectedType === type
                     ? type === "income"
                       ? "bg-[#22d3a6] text-[#06110e]"
                       : "bg-[#ff3f6c] text-white"
-                    : "text-zinc-400 hover:text-white"
-                }`}
+                    : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {type}
               </button>
@@ -114,12 +113,12 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-semibold text-zinc-100">Category</Label>
+            <Label className="text-base font-semibold text-foreground">Category</Label>
             <Select onValueChange={(value) => setValue("category", value)} key={selectedType}>
-              <SelectTrigger className="h-12 w-full rounded-[12px] border-white/10 bg-[#07080d] px-4 text-lg font-normal text-white">
+              <SelectTrigger className="h-12 w-full rounded-[12px] border border-border bg-background px-4 text-lg font-normal text-foreground">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent className="border-white/10 bg-[#0b0c12] text-white">
+              <SelectContent className="border border-border bg-popover text-popover-foreground">
                 {categories.map((category) => (
                   <SelectItem key={category} value={category.toLowerCase()}>
                     {category}
@@ -127,44 +126,44 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                 ))}
               </SelectContent>
             </Select>
-            {errors.category && <p className="text-sm text-[#ff6b8a]">{errors.category.message}</p>}
+            {errors.category && <p className="text-sm text-danger">{errors.category.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-semibold text-zinc-100">Amount</Label>
+            <Label className="text-base font-semibold text-foreground">Amount</Label>
             <div className="relative">
-              <IndianRupee className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+              <IndianRupee className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="number"
                 placeholder="0"
-                className="h-12 rounded-[12px] border-white/10 bg-[#07080d] pl-10 text-lg font-normal text-white placeholder:text-zinc-500"
+                className="h-12 rounded-[12px] border border-border bg-background pl-10 text-lg font-normal text-foreground placeholder:text-muted-foreground"
                 {...register("amount", { valueAsNumber: true })}
               />
             </div>
-            {errors.amount && <p className="text-sm text-[#ff6b8a]">{errors.amount.message}</p>}
+            {errors.amount && <p className="text-sm text-danger">{errors.amount.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-semibold text-zinc-100">Description (optional)</Label>
+            <Label className="text-base font-semibold text-foreground">Description (optional)</Label>
             <Input
               type="text"
               placeholder="e.g. Lunch with team"
-              className="h-12 rounded-[12px] border-white/10 bg-[#07080d] px-4 text-lg font-normal text-white placeholder:text-zinc-500"
+              className="h-12 rounded-[12px] border border-border bg-background px-4 text-lg font-normal text-foreground placeholder:text-muted-foreground"
               {...register("description")}
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-semibold text-zinc-100">Date</Label>
+            <Label className="text-base font-semibold text-foreground">Date</Label>
             <div className="relative">
-              <CalendarDays className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+              <CalendarDays className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="date"
-                className="h-12 rounded-[12px] border-white/10 bg-[#07080d] pl-10 text-lg font-normal text-white"
+                className="h-12 rounded-[12px] border border-border bg-background pl-10 text-lg font-normal text-foreground"
                 {...register("date")}
               />
             </div>
-            {errors.date && <p className="text-sm text-[#ff6b8a]">{errors.date.message}</p>}
+            {errors.date && <p className="text-sm text-danger">{errors.date.message}</p>}
           </div>
 
           <Button

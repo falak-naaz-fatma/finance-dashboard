@@ -61,16 +61,16 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
   const total = useMemo(() => data.reduce((sum, item) => sum + item.value, 0), [data]);
 
   return (
-    <Card className="rounded-[8px] border border-white/10 bg-[#15161f]/90 py-7 shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
+    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
       <CardHeader className="px-8">
         <CardTitle className="text-lg font-semibold">Spending by Category</CardTitle>
-        <p className="text-sm font-normal text-zinc-400">This month</p>
+        <p className="text-sm font-normal text-muted-foreground">This month</p>
       </CardHeader>
       <CardContent className="px-8">
         {loading ? (
-          <div className="flex h-[340px] items-center justify-center text-zinc-400">Loading chart...</div>
+          <div className="flex h-[340px] items-center justify-center text-muted-foreground">Loading chart...</div>
         ) : data.length === 0 ? (
-          <div className="flex h-[340px] items-center justify-center text-zinc-400">No expense data yet</div>
+          <div className="flex h-[340px] items-center justify-center text-muted-foreground">No expense data yet</div>
         ) : (
           <>
             <div className="relative h-[290px] min-w-0">
@@ -84,7 +84,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                     outerRadius={120}
                     paddingAngle={3}
                     dataKey="value"
-                    stroke="#15161f"
+                    stroke="hsl(var(--card))"
                     strokeWidth={3}
                   >
                     {data.map((_, index) => (
@@ -93,10 +93,10 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "#0b0c12",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      background: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
                       borderRadius: "8px",
-                      color: "#fff",
+                      color: "hsl(var(--popover-foreground))",
                     }}
                     formatter={(value) => `₹${Number(value ?? 0).toLocaleString("en-IN")}`}
                   />
@@ -104,8 +104,8 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <p className="text-sm text-zinc-400">Total spent</p>
-                  <p className="text-lg font-semibold text-[#ff416d]">₹{total.toLocaleString("en-IN")}</p>
+                  <p className="text-sm text-muted-foreground">Total spent</p>
+                  <p className="text-lg font-semibold text-danger">₹{total.toLocaleString("en-IN")}</p>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                 <div key={item.name} className="flex items-center gap-3 text-sm">
                   <span className="size-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                   <span className="font-medium">{item.name}</span>
-                  <span className="ml-auto text-zinc-400">
+                  <span className="ml-auto text-muted-foreground">
                     {total ? Math.round((item.value / total) * 100) : 0}%
                   </span>
                 </div>

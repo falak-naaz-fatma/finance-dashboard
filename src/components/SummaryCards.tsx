@@ -41,9 +41,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
       setLoading(true);
       try {
         const userId = "test123";
-        const url = `/api/transactions?userId=${userId}${
-          selectedMonth ? `&month=${selectedMonth}` : ""
-        }`;
+        const url = `/api/transactions?userId=${userId}${selectedMonth ? `&month=${selectedMonth}` : ""
+          }`;
         const res = await fetch(url);
         const transactions = (await res.json()) as ApiTransaction[];
 
@@ -121,17 +120,16 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
         return (
           <Card
             key={card.title}
-            className={`min-h-[190px] rounded-[8px] border border-white/10 bg-[#15161f]/90 py-5 ${card.glow}`}
+            className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}
           >
             <CardContent className="flex h-full flex-col px-5">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-normal text-zinc-400">{card.title}</p>
+                <p className="text-sm font-normal text-muted-foreground">{card.title}</p>
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-semibold ${
-                    isDown
-                      ? "border-[#ff3f6c]/30 bg-[#ff3f6c]/15 text-[#ff3f6c]"
-                      : "border-[#22d3a6]/25 bg-[#22d3a6]/15 text-[#22d3a6]"
-                  }`}
+                  className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-semibold ${isDown
+                    ? "border-danger/30 bg-danger/15 text-danger"
+                    : "border-success/25 bg-success/15 text-success"
+                    }`}
                 >
                   {isDown ? <ArrowDownRight className="size-4" /> : <ArrowUpRight className="size-4" />}
                   {card.change}
@@ -139,7 +137,7 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
               </div>
 
               {loading ? (
-                <div className="mt-7 h-10 w-40 animate-pulse rounded bg-white/10" />
+                <div className="mt-7 h-10 w-40 animate-pulse rounded bg-muted" />
               ) : (
                 <p className={`mt-4 text-[30px] font-semibold leading-none tracking-normal ${card.color}`}>{card.value}</p>
               )}
@@ -149,10 +147,10 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
                   <div
                     className="size-20 rounded-full"
                     style={{
-                      background: `conic-gradient(#8b5cf6 ${Math.min(card.ring, 100) * 3.6}deg, #252630 0deg)`,
+                      background: `conic-gradient(hsl(var(--primary)) ${Math.min(card.ring, 100) * 3.6}deg, hsl(var(--card)) 0deg)`,
                     }}
                   >
-                    <div className="m-2 size-16 rounded-full bg-[#15161f]" />
+                    <div className="m-2 size-16 rounded-full bg-card" />
                   </div>
                 </div>
               ) : (

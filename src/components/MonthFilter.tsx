@@ -24,7 +24,7 @@ export default function MonthFilter({ selectedMonth, onChange }: Props) {
         <Card className="w-full">
             <CardContent className="pt-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <p className="text-sm font-medium text-gray-500 whitespace-nowrap">
+                    <p className="text-sm font-medium text-muted-foreground whitespace-nowrap">
                         Filter by Month:
                     </p>
                     <div className="flex gap-2 flex-wrap">
@@ -32,8 +32,8 @@ export default function MonthFilter({ selectedMonth, onChange }: Props) {
                         <button
                             onClick={() => onChange("")}
                             className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${selectedMonth === ""
-                                    ? "bg-gray-800 text-white"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-muted-foreground hover:bg-accent"
                                 }`}
                         >
                             All Time
@@ -45,8 +45,8 @@ export default function MonthFilter({ selectedMonth, onChange }: Props) {
                                 key={m.value}
                                 onClick={() => onChange(m.value)}
                                 className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${selectedMonth === m.value
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-muted text-muted-foreground hover:bg-accent"
                                     }`}
                             >
                                 {m.label}

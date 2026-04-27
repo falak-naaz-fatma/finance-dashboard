@@ -88,70 +88,70 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
   }, [session, refresh]);
 
   return (
-    <Card className="rounded-[8px] border border-white/10 bg-[#15161f]/90 py-7 shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
+    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
       <CardHeader className="flex-row items-start justify-between px-8">
         <div>
           <CardTitle className="text-lg font-semibold">Monthly Overview</CardTitle>
-          <p className="mt-1 text-sm font-normal text-zinc-400">Income vs Expense comparison</p>
+          <p className="mt-1 text-sm font-normal text-muted-foreground">Income vs Expense comparison</p>
         </div>
-        <button className="flex h-10 min-w-28 items-center justify-between rounded-[12px] border border-white/10 bg-[#07080d] px-4 text-base font-semibold text-zinc-200">
+        <button className="flex h-10 min-w-28 items-center justify-between rounded-[12px] border border-border bg-background px-4 text-base font-semibold text-foreground">
           6M
-          <ChevronDown className="size-4 text-zinc-400" />
+          <ChevronDown className="size-4 text-muted-foreground" />
         </button>
       </CardHeader>
       <CardContent className="px-8">
         {loading ? (
-          <div className="flex h-[340px] items-center justify-center text-zinc-400">Loading chart...</div>
+          <div className="flex h-[340px] items-center justify-center text-muted-foreground">Loading chart...</div>
         ) : data.length === 0 ? (
-          <div className="flex h-[340px] items-center justify-center text-zinc-400">No data yet</div>
+          <div className="flex h-[340px] items-center justify-center text-muted-foreground">No data yet</div>
         ) : (
           <>
             <div className="h-[340px] min-w-0">
               <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <BarChart data={data} barGap={5} barCategoryGap="28%" margin={{ top: 24, right: 8, left: 8, bottom: 8 }}>
-                <defs>
-                  <linearGradient id="incomeBar" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#23d39b" />
-                    <stop offset="100%" stopColor="#15865f" />
-                  </linearGradient>
-                  <linearGradient id="expenseBar" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#ff416d" />
-                    <stop offset="100%" stopColor="#a91f3f" />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid vertical={false} stroke="#ffffff" strokeDasharray="4 5" strokeOpacity={0.1} />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 15 }} />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#a1a1aa", fontSize: 14 }}
-                  tickFormatter={(value) => {
-                    if (Number(value) >= 100000) return `₹${Number(value) / 100000}L`;
-                    if (Number(value) >= 1000) return `₹${Math.round(Number(value) / 1000)}K`;
-                    return `₹${value}`;
-                  }}
-                />
-                <Tooltip
-                  cursor={{ fill: "rgba(255,255,255,0.04)" }}
-                  contentStyle={{
-                    background: "#0b0c12",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#fff",
-                  }}
-                  formatter={(value) => rupee.format(Number(value ?? 0))}
-                />
-                <Bar dataKey="income" fill="url(#incomeBar)" radius={[7, 7, 0, 0]} name="Income" />
-                <Bar dataKey="expense" fill="url(#expenseBar)" radius={[7, 7, 0, 0]} name="Expense" />
-              </BarChart>
+                <BarChart data={data} barGap={5} barCategoryGap="28%" margin={{ top: 24, right: 8, left: 8, bottom: 8 }}>
+                  <defs>
+                    <linearGradient id="incomeBar" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#23d39b" />
+                      <stop offset="100%" stopColor="#15865f" />
+                    </linearGradient>
+                    <linearGradient id="expenseBar" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#ff416d" />
+                      <stop offset="100%" stopColor="#a91f3f" />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 5" strokeOpacity={1} />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 15 }} />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 14 }}
+                    tickFormatter={(value) => {
+                      if (Number(value) >= 100000) return `₹${Number(value) / 100000}L`;
+                      if (Number(value) >= 1000) return `₹${Math.round(Number(value) / 1000)}K`;
+                      return `₹${value}`;
+                    }}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "hsl(var(--accent))" }}
+                    contentStyle={{
+                      background: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "8px",
+                      color: "hsl(var(--popover-foreground))",
+                    }}
+                    formatter={(value) => rupee.format(Number(value ?? 0))}
+                  />
+                  <Bar dataKey="income" fill="url(#incomeBar)" radius={[7, 7, 0, 0]} name="Income" />
+                  <Bar dataKey="expense" fill="url(#expenseBar)" radius={[7, 7, 0, 0]} name="Expense" />
+                </BarChart>
               </ResponsiveContainer>
             </div>
             <div className="mt-4 flex gap-8">
               <span className="flex items-center gap-2 text-base font-medium">
-                <span className="size-3.5 rounded-full bg-[#23d39b]" /> Income
+                <span className="size-3.5 rounded-full bg-success" /> Income
               </span>
               <span className="flex items-center gap-2 text-base font-medium">
-                <span className="size-3.5 rounded-full bg-[#ff416d]" /> Expense
+                <span className="size-3.5 rounded-full bg-danger" /> Expense
               </span>
             </div>
           </>
