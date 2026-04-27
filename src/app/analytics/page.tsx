@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
 import { ResponsiveContainer as ChartContainer, Tooltip as ChartTooltip } from "recharts";
 import {
   CartesianGrid as ReCartesianGrid,
@@ -226,7 +227,7 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-            <article className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Highest Expense Day</p>
@@ -239,9 +240,9 @@ export default function AnalyticsPage() {
                   <CalendarDays className="size-5" />
                 </span>
               </div>
-            </article>
+            </Card>
 
-            <article className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Average Daily Spend</p>
@@ -254,9 +255,9 @@ export default function AnalyticsPage() {
                   <TrendingUp className="size-5" />
                 </span>
               </div>
-            </article>
+            </Card>
 
-            <article className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Most Spent Category</p>
@@ -270,11 +271,11 @@ export default function AnalyticsPage() {
                   <WalletCards className="size-5" />
                 </span>
               </div>
-            </article>
+            </Card>
           </section>
 
           <section className="mt-7 grid grid-cols-1 gap-5 xl:grid-cols-2">
-            <article className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               <h2 className="text-lg font-semibold">Balance Trend</h2>
               <p className="mt-2 text-sm text-muted-foreground">Cumulative balance over 6 months</p>
               <div className="mt-6 h-[300px] min-w-0">
@@ -312,9 +313,9 @@ export default function AnalyticsPage() {
                   </ReLineChart>
                 </ChartContainer>
               </div>
-            </article>
+            </Card>
 
-            <article className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               <h2 className="text-lg font-semibold">Top 5 Categories</h2>
               <p className="mt-2 text-sm text-muted-foreground">Highest spending this month</p>
               <div className="mt-6 h-[300px] min-w-0">
@@ -368,10 +369,10 @@ export default function AnalyticsPage() {
                   </ReBarChart>
                 </ChartContainer>
               </div>
-            </article>
+            </Card>
           </section>
 
-          <section className="mt-7 rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+          <Card className="mt-7 rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-lg font-semibold">Spending Activity</h2>
@@ -398,7 +399,7 @@ export default function AnalyticsPage() {
                 />
               ))}
             </div>
-          </section>
+          </Card>
         </main>
       </div>
     </div>

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -142,7 +143,7 @@ function GoalCard({ goal }: { goal: Goal }) {
   const remaining = Math.max(0, goal.target - goal.saved);
 
   return (
-    <article className="rounded-[8px] border border-white/10 bg-card p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+    <Card className="rounded-[8px] border border-white/10 bg-card p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
           <div className="flex size-12 items-center justify-center rounded-[14px] bg-gradient-to-br from-[#7657ff] to-[#c052f4] shadow-[0_0_26px_rgba(139,92,246,0.18)]">
@@ -174,7 +175,7 @@ function GoalCard({ goal }: { goal: Goal }) {
         />
       </div>
       <p className="mt-3 text-sm text-muted-foreground">{formatCurrency(remaining)} to go</p>
-    </article>
+    </Card>
   );
 }
 

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
 
 type Transaction = {
   _id: string;
@@ -173,7 +174,7 @@ export default function BudgetPage() {
               const overBudget = item.remaining < 0;
 
               return (
-                <article
+                <Card
                   key={item.category}
                   className="rounded-[8px] border border-border bg-card p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
                 >
@@ -211,7 +212,7 @@ export default function BudgetPage() {
                       {overBudget ? `Over ${currency(Math.abs(item.remaining))}` : `${currency(item.remaining)} left`}
                     </p>
                   </div>
-                </article>
+                </Card>
               );
             })}
           </section>
