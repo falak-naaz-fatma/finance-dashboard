@@ -61,7 +61,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
   const total = useMemo(() => data.reduce((sum, item) => sum + item.value, 0), [data]);
 
   return (
-    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
+    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
       <CardHeader className="px-8">
         <CardTitle className="text-lg font-semibold">Spending by Category</CardTitle>
         <p className="text-sm font-normal text-muted-foreground">This month</p>

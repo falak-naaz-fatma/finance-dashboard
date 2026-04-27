@@ -88,7 +88,7 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
   }, [session, refresh]);
 
   return (
-    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
+    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
       <CardHeader className="flex-row items-start justify-between px-8">
         <div>
           <CardTitle className="text-lg font-semibold">Monthly Overview</CardTitle>

@@ -83,7 +83,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const categories = selectedType === "income" ? incomeCategories : expenseCategories;
 
   return (
-    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
+    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
       <CardHeader className="px-8">
         <CardTitle className="text-lg font-semibold">Add Transaction</CardTitle>
         <p className="text-sm font-normal text-muted-foreground">Track a new income or expense</p>
@@ -101,10 +101,10 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                   setValue("category", "");
                 }}
                 className={`h-11 rounded-[12px] text-base font-semibold capitalize transition ${selectedType === type
-                    ? type === "income"
-                      ? "bg-[#22d3a6] text-[#06110e]"
-                      : "bg-[#ff3f6c] text-white"
-                    : "text-muted-foreground hover:text-foreground"
+                  ? type === "income"
+                    ? "bg-[#22d3a6] text-[#06110e]"
+                    : "bg-[#ff3f6c] text-white"
+                  : "text-muted-foreground hover:text-foreground"
                   }`}
               >
                 {type}

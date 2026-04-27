@@ -87,7 +87,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
   };
 
   return (
-    <Card className="rounded-[8px] border border-border bg-card py-7 shadow-card">
+    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
       <CardHeader className="flex flex-row items-start justify-between gap-4 px-8">
         <div className="min-w-0">
           <CardTitle className="text-lg font-semibold">Recent Transactions</CardTitle>
@@ -117,8 +117,8 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
                   <div className="flex min-w-0 items-center gap-4">
                     <div
                       className={`flex size-12 shrink-0 items-center justify-center rounded-full border ${isIncome
-                          ? "border-success/20 bg-success/10 text-success"
-                          : "border-danger/20 bg-danger/10 text-danger"
+                        ? "border-success/20 bg-success/10 text-success"
+                        : "border-danger/20 bg-danger/10 text-danger"
                         }`}
                     >
                       <Icon className="size-5" />

@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -114,7 +115,7 @@ function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="transparent"
-          stroke="rgba(255,255,255,0.12)"
+          stroke="hsl(var(--border))"
           strokeWidth={stroke}
         />
         <circle
@@ -122,14 +123,14 @@ function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="transparent"
-          stroke="#8b5cf6"
+          stroke="hsl(var(--primary))"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={`${dash} ${circumference - dash}`}
         />
       </svg>
       <div className="absolute inset-0 grid place-items-center">
-        <span className="text-xs font-semibold text-white">{clamped}%</span>
+        <span className="text-xs font-semibold text-foreground">{clamped}%</span>
       </div>
     </div>
   );
@@ -148,8 +149,8 @@ function GoalCard({ goal }: { goal: Goal }) {
             {Icon ? <Icon className="size-5 text-white" /> : <span className="text-xl leading-none">{goal.emoji}</span>}
           </div>
           <div>
-            <h2 className="text-lg font-semibold leading-tight text-white">{goal.title}</h2>
-            <p className="mt-1 text-sm text-zinc-400">{goal.dueLabel}</p>
+            <h2 className="text-lg font-semibold leading-tight text-foreground">{goal.title}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{goal.dueLabel}</p>
           </div>
         </div>
         <ProgressRing value={pct} />
@@ -157,22 +158,22 @@ function GoalCard({ goal }: { goal: Goal }) {
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-sm text-zinc-400">Saved</p>
-          <p className="mt-2 text-xl font-semibold text-[#22d3a6]">{formatCurrency(goal.saved)}</p>
+          <p className="text-sm text-muted-foreground">Saved</p>
+          <p className="mt-2 text-xl font-semibold text-success">{formatCurrency(goal.saved)}</p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-zinc-400">Target</p>
-          <p className="mt-2 text-xl font-semibold text-white">{formatCurrency(goal.target)}</p>
+          <p className="text-sm text-muted-foreground">Target</p>
+          <p className="mt-2 text-xl font-semibold text-foreground">{formatCurrency(goal.target)}</p>
         </div>
       </div>
 
       <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#7657ff] to-[#c052f4]"
+          className="h-full rounded-full bg-gradient-to-r from-primary to-[#c052f4]"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="mt-3 text-sm text-zinc-400">{formatCurrency(remaining)} to go</p>
+      <p className="mt-3 text-sm text-muted-foreground">{formatCurrency(remaining)} to go</p>
     </article>
   );
 }
@@ -226,36 +227,7 @@ export default function SavingsGoalsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-white/10 bg-background lg:flex lg:flex-col">
-        <div className="flex items-center gap-3 px-7 py-8">
-          <div className="flex size-11 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#7657ff] to-[#c052f4] shadow-[0_0_30px_rgba(139,92,246,0.35)]">
-            <WalletCards className="size-5" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold leading-tight">FinTrack</p>
-            <p className="text-sm text-zinc-400">Personal Finance</p>
-          </div>
-        </div>
-
-        <nav className="mt-7 flex flex-1 flex-col gap-2 px-4">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`flex h-11 items-center gap-3 rounded-[14px] px-4 text-left text-sm font-medium transition ${item.active
-                  ? "bg-[#211a3d] text-[#8b5cf6] shadow-[inset_4px_0_0_#8b5cf6]"
-                  : "text-zinc-200 hover:bg-white/5"
-                  }`}
-              >
-                <Icon className="size-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+      <Sidebar navItems={navItems} />
 
       <div className="lg:pl-[280px]">
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
@@ -264,12 +236,12 @@ export default function SavingsGoalsPage() {
           <section className="mb-8 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Savings Goals</h1>
-              <p className="mt-2 text-sm font-normal text-zinc-400">Track progress toward what matters</p>
+              <p className="mt-2 text-sm font-normal text-muted-foreground">Track progress toward what matters</p>
             </div>
             <button
               type="button"
               onClick={() => setIsCreateOpen(true)}
-              className="inline-flex h-10 items-center gap-2 rounded-[14px] bg-gradient-to-r from-[#7657ff] to-[#c052f4] px-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(139,92,246,0.25)] transition hover:brightness-110"
+              className="inline-flex h-10 items-center gap-2 rounded-[14px] bg-gradient-to-r from-primary to-[#c052f4] px-4 text-sm font-semibold text-primary-foreground shadow-[0_18px_40px_rgba(139,92,246,0.25)] transition hover:brightness-110"
             >
               <Plus className="size-4" />
               Add Goal
@@ -288,14 +260,14 @@ export default function SavingsGoalsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.78] px-4 py-6 backdrop-blur-[1px]">
           <form
             onSubmit={handleCreateGoal}
-            className="flex w-full max-w-[640px] flex-col overflow-hidden rounded-[16px] border border-white/15 bg-[#090a0f] shadow-[0_28px_90px_rgba(0,0,0,0.65)]"
+            className="flex w-full max-w-[640px] flex-col overflow-hidden rounded-[16px] border border-border bg-popover shadow-[0_28px_90px_rgba(0,0,0,0.65)]"
           >
             <div className="flex items-center justify-between gap-4 px-7 pt-7">
-              <h2 className="text-xl font-semibold leading-tight text-white">Create a savings goal</h2>
+              <h2 className="text-xl font-semibold leading-tight text-foreground">Create a savings goal</h2>
               <button
                 type="button"
                 onClick={closeCreateGoal}
-                className="rounded-full p-1.5 text-zinc-300 transition hover:bg-white/10 hover:text-white"
+                className="rounded-full p-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
                 title="Close"
               >
                 <X className="size-5" />
@@ -304,48 +276,48 @@ export default function SavingsGoalsPage() {
 
             <div className="space-y-5 px-7 py-7">
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-white">Emoji</span>
+                <span className="mb-2 block text-sm font-semibold text-foreground">Emoji</span>
                 <input
                   value={emoji}
                   onChange={(event) => setEmoji(event.target.value)}
                   aria-label="Goal emoji"
-                  className="h-[58px] w-full rounded-[16px] border border-[#8b5cf6] bg-[#101116] px-4 text-lg text-white outline-none transition placeholder:text-zinc-500 focus:border-[#a78bfa] focus:ring-4 focus:ring-[#8b5cf6]/45"
+                  className="h-[58px] w-full rounded-[16px] border border-primary bg-background px-4 text-lg text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary/80 focus:ring-4 focus:ring-primary/45"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-white">Goal Name</span>
+                <span className="mb-2 block text-sm font-semibold text-foreground">Goal Name</span>
                 <input
                   value={goalName}
                   onChange={(event) => setGoalName(event.target.value)}
                   placeholder="e.g. New Laptop"
-                  className="h-[50px] w-full rounded-[14px] border border-white/15 bg-[#090a0f] px-4 text-base text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/80 focus:ring-4 focus:ring-[#8b5cf6]/15"
+                  className="h-[50px] w-full rounded-[14px] border border-border bg-background px-4 text-base text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary/80 focus:ring-4 focus:ring-primary/15"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-white">Target Amount</span>
+                <span className="mb-2 block text-sm font-semibold text-foreground">Target Amount</span>
                 <input
                   value={targetAmount}
                   onChange={(event) => setTargetAmount(event.target.value)}
                   inputMode="numeric"
                   placeholder="100000"
-                  className="h-[50px] w-full rounded-[14px] border border-white/15 bg-[#090a0f] px-4 text-base text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/80 focus:ring-4 focus:ring-[#8b5cf6]/15"
+                  className="h-[50px] w-full rounded-[14px] border border-border bg-background px-4 text-base text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary/80 focus:ring-4 focus:ring-primary/15"
                 />
               </label>
             </div>
 
-            <div className="flex justify-end gap-3 border-t border-white/10 bg-[#090a0f] px-7 py-7">
+            <div className="flex justify-end gap-3 border-t border-border bg-popover px-7 py-7">
               <button
                 type="button"
                 onClick={closeCreateGoal}
-                className="h-12 rounded-[12px] border border-white/15 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
+                className="h-12 rounded-[12px] border border-border px-5 text-sm font-semibold text-foreground transition hover:bg-accent"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="h-12 rounded-[12px] bg-gradient-to-r from-[#7657ff] to-[#c052f4] px-6 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(139,92,246,0.28)] transition hover:brightness-110"
+                className="h-12 rounded-[12px] bg-gradient-to-r from-primary to-[#c052f4] px-6 text-sm font-semibold text-primary-foreground shadow-[0_16px_34px_rgba(139,92,246,0.28)] transition hover:brightness-110"
               >
                 Create Goal
               </button>
@@ -356,4 +328,3 @@ export default function SavingsGoalsPage() {
     </div>
   );
 }
-

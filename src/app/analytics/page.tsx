@@ -15,6 +15,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
 import { ResponsiveContainer as ChartContainer, Tooltip as ChartTooltip } from "recharts";
 import {
   CartesianGrid as ReCartesianGrid,
@@ -211,36 +212,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-white/10 bg-background lg:flex lg:flex-col">
-        <div className="flex items-center gap-3 px-7 py-8">
-          <div className="flex size-11 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#7657ff] to-[#c052f4] shadow-[0_0_30px_rgba(139,92,246,0.35)]">
-            <WalletCards className="size-5" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold leading-tight">FinTrack</p>
-            <p className="text-sm text-zinc-400">Personal Finance</p>
-          </div>
-        </div>
-
-        <nav className="mt-7 flex flex-1 flex-col gap-2 px-4">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`flex h-11 items-center gap-3 rounded-[14px] px-4 text-left text-sm font-medium transition ${item.active
-                  ? "bg-[#211a3d] text-[#8b5cf6] shadow-[inset_4px_0_0_#8b5cf6]"
-                  : "text-zinc-200 hover:bg-white/5"
-                  }`}
-              >
-                <Icon className="size-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+      <Sidebar navItems={navItems} />
 
       <div className="lg:pl-[280px]">
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
