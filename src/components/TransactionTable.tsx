@@ -113,7 +113,7 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
             transaction.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
             transaction.description?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = filterType === "all" || transaction.type === filterType;
-        const matchesMonth = !selectedMonthState || new Date(transaction.date).toLocaleString('default', { month: 'short', year: '2-digit' }) === selectedMonthState;
+        const matchesMonth = !selectedMonthState || new Date(transaction.date).toLocaleString('default', { month: 'short', year: 'numeric' }) === selectedMonthState;
         return matchesSearch && matchesType && matchesMonth;
     });
 
