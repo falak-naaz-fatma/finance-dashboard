@@ -48,7 +48,8 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const res = await fetch(`/api/transactions?userId=${userId}`);
         const transactions = (await res.json()) as ApiTransaction[];
         const monthlyMap: Record<string, MonthlyBucket> = {};

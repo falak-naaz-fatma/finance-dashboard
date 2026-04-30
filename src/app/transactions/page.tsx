@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { BarChart3, LayoutDashboard, PiggyBank, Plus, Search, Target, WalletCards } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -50,24 +50,13 @@ export default function TransactionsPage() {
               <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Transactions</h1>
               <p className="mt-2 text-sm font-normal text-muted-foreground">View and manage all your transactions</p>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                const dialog = document.getElementById("add-transaction-dialog") as HTMLDialogElement;
-                if (dialog) dialog.showModal();
-              }}
-              className="inline-flex h-10 items-center gap-2 rounded-[14px] bg-gradient-to-r from-primary to-[#c052f4] px-4 text-sm font-semibold text-primary-foreground shadow-[0_18px_40px_rgba(139,92,246,0.25)] transition hover:brightness-110"
-            >
-              <Plus className="size-4" />
-              Add Transaction
-            </button>
+
           </section>
 
           <TransactionList refresh={refresh} selectedMonth={selectedMonth} />
         </main>
       </div>
 
-      <AddTransactionForm onSuccess={handleSuccess} />
     </div>
   );
 }

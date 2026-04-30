@@ -39,15 +39,7 @@ const navItems = [
   { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
-const budgets: BudgetItem[] = [
-  { category: "food", limit: 15000, color: "from-[#ffb21f] to-[#ff7a1a]" },
-  { category: "travel", limit: 12000, color: "from-[#20d39f] to-[#2dd4bf]" },
-  { category: "shopping", limit: 10000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "bills", limit: 18000, color: "from-[#34d399] to-[#2dd4bf]" },
-  { category: "health", limit: 5000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "education", limit: 6000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "entertainment", limit: 4000, color: "from-[#ff416d] to-[#ec4ed8]" },
-];
+const budgets: BudgetItem[] = [];
 
 const categoryIcon: Record<string, string> = {
   food: "🍔",
@@ -88,7 +80,8 @@ export default function BudgetPage() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const res = await fetch(`/api/transactions?userId=${userId}`);
         const data = (await res.json()) as Transaction[];
         setTransactions(data);

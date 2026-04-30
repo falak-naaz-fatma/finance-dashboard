@@ -54,7 +54,8 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const onSubmit = async (data: TransactionForm) => {
     setLoading(true);
     try {
-      const userId = (session?.user as { id?: string } | undefined)?.id || "test123";
+      const userId = (session?.user as { id?: string })?.id;
+      if (!userId) return;
       const response = await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

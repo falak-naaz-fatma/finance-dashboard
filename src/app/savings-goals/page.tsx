@@ -40,40 +40,7 @@ type Goal = {
   emoji?: string;
 };
 
-const goals: Goal[] = [
-  {
-    id: "emergency",
-    title: "Emergency Fund",
-    dueLabel: "Due Dec 2026",
-    saved: 142000,
-    target: 200000,
-    icon: Shield,
-  },
-  {
-    id: "vacation",
-    title: "Vacation to Japan",
-    dueLabel: "Due Sept 2026",
-    saved: 48000,
-    target: 150000,
-    icon: Plane,
-  },
-  {
-    id: "iphone",
-    title: "New iPhone",
-    dueLabel: "Due Jun 2026",
-    saved: 95000,
-    target: 120000,
-    icon: Smartphone,
-  },
-  {
-    id: "home",
-    title: "Home Down Payment",
-    dueLabel: "Due Jan 2028",
-    saved: 320000,
-    target: 1500000,
-    icon: Home,
-  },
-];
+const goals: Goal[] = [];
 
 function getInitials(name?: string | null, email?: string | null) {
   const source = name || email || "Aarav Sharma";

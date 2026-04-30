@@ -56,7 +56,8 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
     const fetchTransactions = async () => {
       setLoading(true);
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const url = `/api/transactions?userId=${userId}${selectedMonth ? `&month=${selectedMonth}` : ""
           }`;
         const res = await fetch(url);

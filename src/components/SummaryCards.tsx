@@ -40,7 +40,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
     const fetchSummary = async () => {
       setLoading(true);
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const url = `/api/transactions?userId=${userId}${selectedMonth ? `&month=${selectedMonth}` : ""
           }`;
         const res = await fetch(url);

@@ -125,7 +125,8 @@ export default function AnalyticsPage() {
     const fetchTransactions = async () => {
       setLoading(true);
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const res = await fetch(`/api/transactions?userId=${userId}`);
         const data = (await res.json()) as Transaction[];
         setTransactions(data);

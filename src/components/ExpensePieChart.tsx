@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Session } from "next-auth";
+
 
 const COLORS = ["#7c5cff", "#32b8f1", "#2ee0a5", "#ffbd4a", "#ff5b7a", "#94a3b8", "#f472b6"];
 
@@ -32,7 +34,8 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const res = await fetch(`/api/transactions?userId=${userId}`);
         const transactions = (await res.json()) as ApiTransaction[];
         const grouped: Record<string, number> = {};
