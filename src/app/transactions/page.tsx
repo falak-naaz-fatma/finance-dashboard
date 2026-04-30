@@ -7,7 +7,7 @@ import { BarChart3, LayoutDashboard, PiggyBank, Plus, Search, Target, WalletCard
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import AddTransactionForm from "@/components/AddTransactionForm";
-import TransactionList from "@/components/TransactionList";
+import TransactionTable from "@/components/TransactionTable";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -53,7 +53,7 @@ export default function TransactionsPage() {
 
           </section>
 
-          <TransactionList refresh={refresh} selectedMonth={selectedMonth} />
+          <TransactionTable refresh={refresh} selectedMonth={selectedMonth} />
         </main>
       </div>
 

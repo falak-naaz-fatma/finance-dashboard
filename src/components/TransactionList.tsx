@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   BookOpen,
   Briefcase,
@@ -51,6 +52,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
   const { data: session } = useSession();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -87,6 +89,10 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
     }
   };
 
+  const handleViewAll = () => {
+    router.push("/transactions");
+  };
+
   return (
     <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
       <CardHeader className="flex flex-row items-start justify-between gap-4 px-8">
@@ -94,7 +100,10 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
           <CardTitle className="text-lg font-semibold">Recent Transactions</CardTitle>
           <p className="mt-1 text-sm font-normal text-muted-foreground">Your latest activity</p>
         </div>
-        <button className="shrink-0 pt-1 text-sm font-medium text-primary transition hover:text-primary/80">
+        <button
+          className="shrink-0 pt-1 text-sm font-medium text-primary transition hover:text-primary/80"
+          onClick={handleViewAll}
+        >
           View All
         </button>
       </CardHeader>
