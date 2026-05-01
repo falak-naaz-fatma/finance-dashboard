@@ -3,18 +3,19 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+
 import {
   BarChart3,
-  Bell,
   ClipboardList,
   LayoutDashboard,
   PiggyBank,
   Search,
-  Sun,
   Target,
   WalletCards,
 } from "lucide-react";
-import UserMenu from "@/components/UserMenu";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
 
 type Transaction = {
   _id: string;
@@ -38,15 +39,7 @@ const navItems = [
   { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
-const budgets: BudgetItem[] = [
-  { category: "food", limit: 15000, color: "from-[#ffb21f] to-[#ff7a1a]" },
-  { category: "travel", limit: 12000, color: "from-[#20d39f] to-[#2dd4bf]" },
-  { category: "shopping", limit: 10000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "bills", limit: 18000, color: "from-[#34d399] to-[#2dd4bf]" },
-  { category: "health", limit: 5000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "education", limit: 6000, color: "from-[#ff416d] to-[#ec4ed8]" },
-  { category: "entertainment", limit: 4000, color: "from-[#ff416d] to-[#ec4ed8]" },
-];
+const budgets: BudgetItem[] = [];
 
 const categoryIcon: Record<string, string> = {
   food: "🍔",
@@ -87,7 +80,8 @@ export default function BudgetPage() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const userId = "test123";
+        const userId = (session?.user as { id?: string })?.id;
+        if (!userId) return;
         const res = await fetch(`/api/transactions?userId=${userId}`);
         const data = (await res.json()) as Transaction[];
         setTransactions(data);
@@ -132,87 +126,37 @@ export default function BudgetPage() {
   }, [transactions]);
 
   return (
-    <div className="min-h-screen bg-[#07080d] text-white">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-white/10 bg-[#0b0c12] lg:flex lg:flex-col">
-        <div className="flex items-center gap-3 px-7 py-8">
-          <div className="flex size-11 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#7657ff] to-[#c052f4] shadow-[0_0_30px_rgba(139,92,246,0.35)]">
-            <WalletCards className="size-5" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold leading-tight">FinTrack</p>
-            <p className="text-sm text-zinc-400">Personal Finance</p>
-          </div>
-        </div>
-
-        <nav className="mt-7 flex flex-1 flex-col gap-2 px-4">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`flex h-11 items-center gap-3 rounded-[14px] px-4 text-left text-sm font-medium transition ${
-                  item.active
-                    ? "bg-[#211a3d] text-[#8b5cf6] shadow-[inset_4px_0_0_#8b5cf6]"
-                    : "text-zinc-200 hover:bg-white/5"
-                }`}
-              >
-                <Icon className="size-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+    <div className="min-h-screen bg-background text-foreground">
+      <Sidebar navItems={navItems} />
 
       <div className="lg:pl-[280px]">
-        <header className="sticky top-0 z-20 border-b border-white/10 bg-[#07080d]/90 backdrop-blur">
-          <div className="flex h-[72px] items-center gap-4 px-4 sm:px-8 lg:px-10">
-            <div className="relative w-full max-w-[560px]">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-              <input
-                placeholder="Search transactions, categories..."
-                className="h-9 w-full rounded-[12px] border border-white/10 bg-white/[0.06] px-10 text-sm font-normal text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/70 focus:ring-4 focus:ring-[#8b5cf6]/10"
-              />
-            </div>
-            <div className="ml-auto flex items-center gap-3">
-              <button className="relative rounded-full p-2 text-zinc-200 transition hover:bg-white/10" title="Notifications">
-                <Bell className="size-5" />
-                <span className="absolute right-1.5 top-1.5 size-2.5 rounded-full bg-[#ff3f6c]" />
-              </button>
-              <button className="rounded-full p-2 text-zinc-200 transition hover:bg-white/10" title="Theme">
-                <Sun className="size-5" />
-              </button>
-              <UserMenu userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
-            </div>
-          </div>
-        </header>
+        <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
 
         <main className="px-4 py-10 sm:px-8 lg:px-10">
           <section className="mb-8">
             <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Budget</h1>
-            <p className="mt-2 text-sm font-normal text-zinc-400">Track your monthly spending against limits</p>
+            <p className="mt-2 text-sm font-normal text-muted-foreground">Track your monthly spending against limits</p>
           </section>
 
-          <section className="rounded-[8px] border border-white/10 bg-[#15161f]/90 p-7 shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
+          <section className="rounded-[8px] border border-border bg-card p-7 shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-zinc-400">Overall Budget</p>
-                <p className="mt-3 text-[30px] font-semibold leading-none text-[#ff416d]">
+                <p className="text-sm text-muted-foreground">Overall Budget</p>
+                <p className="mt-3 text-[30px] font-semibold leading-none text-danger">
                   {currency(budgetData.totalSpent)}
-                  <span className="ml-2 text-xl font-normal text-zinc-400">/ {currency(budgetData.totalLimit)}</span>
+                  <span className="ml-2 text-xl font-normal text-muted-foreground">/ {currency(budgetData.totalLimit)}</span>
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-zinc-400">Remaining</p>
-                <p className={`mt-2 text-2xl font-semibold ${budgetData.totalRemaining >= 0 ? "text-[#22d3a6]" : "text-[#ff416d]"}`}>
+                <p className="text-sm text-muted-foreground">Remaining</p>
+                <p className={`mt-2 text-2xl font-semibold ${budgetData.totalRemaining >= 0 ? "text-success" : "text-danger"}`}>
                   {currency(Math.abs(budgetData.totalRemaining))}
                 </p>
               </div>
             </div>
-            <div className="mt-7 h-3 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-7 h-3 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#ff416d] to-[#ec4ed8]"
+                className="h-full rounded-full bg-gradient-to-r from-danger to-[#ec4ed8]"
                 style={{ width: `${budgetData.totalPercent}%` }}
               />
             </div>
@@ -223,46 +167,45 @@ export default function BudgetPage() {
               const overBudget = item.remaining < 0;
 
               return (
-                <article
+                <Card
                   key={item.category}
-                  className="rounded-[8px] border border-white/10 bg-[#15161f]/90 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
+                  className="rounded-[8px] border border-border bg-card p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="flex size-12 items-center justify-center rounded-[14px] bg-[#211a3d] text-xl">
+                      <div className="flex size-12 items-center justify-center rounded-[14px] bg-muted text-xl">
                         {categoryIcon[item.category] || "💳"}
                       </div>
                       <div>
                         <h2 className="text-lg font-semibold">{label(item.category)}</h2>
-                        <p className="mt-1 text-sm text-zinc-400">Limit {currency(item.limit)}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Limit {currency(item.limit)}</p>
                       </div>
                     </div>
                     <span
-                      className={`rounded-full border px-3 py-1 text-sm font-semibold ${
-                        overBudget
-                          ? "border-[#ff416d]/25 bg-[#ff416d]/15 text-[#ff416d]"
-                          : item.percent > 80
-                            ? "border-[#ffb21f]/25 bg-[#ffb21f]/15 text-[#ffb21f]"
-                            : "border-[#22d3a6]/20 bg-[#22d3a6]/15 text-[#22d3a6]"
-                      }`}
+                      className={`rounded-full border px-3 py-1 text-sm font-semibold ${overBudget
+                        ? "border-danger/25 bg-danger/15 text-danger"
+                        : item.percent > 80
+                          ? "border-warning/25 bg-warning/15 text-warning"
+                          : "border-success/20 bg-success/15 text-success"
+                        }`}
                     >
                       {item.percent}%
                     </span>
                   </div>
 
-                  <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+                  <div className="mt-5 h-3 overflow-hidden rounded-full bg-muted">
                     <div className={`h-full rounded-full bg-gradient-to-r ${item.color}`} style={{ width: `${item.percent}%` }} />
                   </div>
 
                   <div className="mt-4 flex items-center justify-between text-sm">
-                    <p className="text-zinc-400">
-                      Spent <span className="font-semibold text-white">{currency(item.spent)}</span>
+                    <p className="text-muted-foreground">
+                      Spent <span className="font-semibold text-foreground">{currency(item.spent)}</span>
                     </p>
-                    <p className={`font-semibold ${overBudget ? "text-[#ff416d]" : "text-[#22d3a6]"}`}>
+                    <p className={`font-semibold ${overBudget ? "text-danger" : "text-success"}`}>
                       {overBudget ? `Over ${currency(Math.abs(item.remaining))}` : `${currency(item.remaining)} left`}
                     </p>
                   </div>
-                </article>
+                </Card>
               );
             })}
           </section>

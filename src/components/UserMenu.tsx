@@ -44,7 +44,7 @@ export default function UserMenu({ userName, userEmail, initials, onLogout }: Us
       <button
         ref={buttonRef}
         type="button"
-        className="flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-[#7657ff] to-[#c052f4] font-semibold text-white transition hover:brightness-110"
+        className="flex size-11 items-center justify-center rounded-full bg-gradient-fintech font-semibold text-white shadow-glow transition hover:scale-105"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={id}
@@ -60,11 +60,11 @@ export default function UserMenu({ userName, userEmail, initials, onLogout }: Us
           id={id}
           role="menu"
           aria-label="Account menu"
-          className="absolute right-0 top-[calc(100%+12px)] z-50 w-[280px] rounded-[16px] border border-white/10 bg-[#0b0c12] p-3 shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
+          className="absolute right-0 top-[calc(100%+12px)] z-50 w-[280px] rounded-2xl border border-white/10 bg-popover/95 p-3 shadow-card backdrop-blur-xl"
         >
-          <div className="rounded-[14px] border border-white/10 bg-white/[0.04] p-3">
-            <p className="truncate text-sm font-semibold text-white">{userName}</p>
-            <p className="truncate text-sm text-zinc-400">{userEmail}</p>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+            <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
+            <p className="truncate text-sm text-muted-foreground">{userEmail}</p>
           </div>
 
           <div className="my-3 h-px bg-white/10" />
@@ -72,13 +72,13 @@ export default function UserMenu({ userName, userEmail, initials, onLogout }: Us
           <button
             type="button"
             role="menuitem"
-            className="flex w-full items-center gap-2 rounded-[12px] px-3 py-2.5 text-left text-sm font-semibold text-zinc-200 transition hover:bg-white/5 hover:text-white"
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-foreground transition hover:bg-white/10"
             onClick={() => {
               setOpen(false);
               onLogout();
             }}
           >
-            <LogOut className="size-4 text-zinc-300" />
+            <LogOut className="size-4 text-muted-foreground" />
             Logout
           </button>
         </div>
