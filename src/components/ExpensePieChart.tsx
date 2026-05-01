@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Session } from "next-auth";
 
 
 const COLORS = ["#7c5cff", "#32b8f1", "#2ee0a5", "#ffbd4a", "#ff5b7a", "#94a3b8", "#f472b6"];
@@ -64,7 +64,13 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
   const total = useMemo(() => data.reduce((sum, item) => sum + item.value, 0), [data]);
 
   return (
-    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 180, damping: 22 }}
+    >
+    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
       <CardHeader className="px-8">
         <CardTitle className="text-lg font-semibold">Spending by Category</CardTitle>
         <p className="text-sm font-normal text-muted-foreground">This month</p>
@@ -87,7 +93,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                     outerRadius={120}
                     paddingAngle={3}
                     dataKey="value"
-                    stroke="hsl(var(--card))"
+                    stroke="hsl(var(--background))"
                     strokeWidth={3}
                   >
                     {data.map((_, index) => (
@@ -127,5 +133,6 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
         )}
       </CardContent>
     </Card>
+    </motion.div>
   );
 }

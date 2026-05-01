@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 import {
   Bar,
   BarChart,
@@ -89,13 +90,19 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
   }, [session, refresh]);
 
   return (
-    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 180, damping: 22 }}
+    >
+    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
       <CardHeader className="flex-row items-start justify-between px-8">
         <div>
           <CardTitle className="text-lg font-semibold">Monthly Overview</CardTitle>
           <p className="mt-1 text-sm font-normal text-muted-foreground">Income vs Expense comparison</p>
         </div>
-        <button className="flex h-10 min-w-28 items-center justify-between rounded-[12px] border border-border bg-background px-4 text-base font-semibold text-foreground">
+        <button className="flex h-10 min-w-28 items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 text-base font-semibold text-foreground transition hover:bg-white/10">
           6M
           <ChevronDown className="size-4 text-muted-foreground" />
         </button>
@@ -111,16 +118,16 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
               <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <BarChart data={data} barGap={5} barCategoryGap="28%" margin={{ top: 24, right: 8, left: 8, bottom: 8 }}>
                   <defs>
-                    <linearGradient id="incomeBar" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#23d39b" />
-                      <stop offset="100%" stopColor="#15865f" />
+                    <linearGradient id="incomeGradient" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#22C55E" stopOpacity={0.9} />
+                      <stop offset="100%" stopColor="#22C55E" stopOpacity={0.18} />
                     </linearGradient>
-                    <linearGradient id="expenseBar" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#ff416d" />
-                      <stop offset="100%" stopColor="#a91f3f" />
+                    <linearGradient id="expenseGradient" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#EF4444" stopOpacity={0.9} />
+                      <stop offset="100%" stopColor="#EF4444" stopOpacity={0.18} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 5" strokeOpacity={1} />
+                  <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 8" strokeOpacity={0.1} />
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 15 }} />
                   <YAxis
                     axisLine={false}
@@ -133,7 +140,7 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
                     }}
                   />
                   <Tooltip
-                    cursor={{ fill: "hsl(var(--accent))" }}
+                    cursor={{ fill: "hsl(var(--accent) / 0.45)" }}
                     contentStyle={{
                       background: "hsl(var(--popover))",
                       border: "1px solid hsl(var(--border))",
@@ -142,22 +149,23 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
                     }}
                     formatter={(value) => rupee.format(Number(value ?? 0))}
                   />
-                  <Bar dataKey="income" fill="url(#incomeBar)" radius={[7, 7, 0, 0]} name="Income" />
-                  <Bar dataKey="expense" fill="url(#expenseBar)" radius={[7, 7, 0, 0]} name="Expense" />
+                  <Bar dataKey="income" fill="url(#incomeGradient)" radius={[10, 10, 4, 4]} name="Income" />
+                  <Bar dataKey="expense" fill="url(#expenseGradient)" radius={[10, 10, 4, 4]} name="Expense" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
             <div className="mt-4 flex gap-8">
               <span className="flex items-center gap-2 text-base font-medium">
-                <span className="size-3.5 rounded-full bg-success" /> Income
+                <span className="size-3.5 rounded-full bg-income" /> Income
               </span>
               <span className="flex items-center gap-2 text-base font-medium">
-                <span className="size-3.5 rounded-full bg-danger" /> Expense
+                <span className="size-3.5 rounded-full bg-expense" /> Expense
               </span>
             </div>
           </>
         )}
       </CardContent>
     </Card>
+    </motion.div>
   );
 }

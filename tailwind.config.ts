@@ -20,6 +20,10 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        income: "#22C55E",
+        expense: "#EF4444",
+        textPrimary: "#E5E7EB",
+        textSecondary: "#9CA3AF",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -75,6 +79,7 @@ export default {
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-card': 'var(--gradient-card)',
+        'gradient-fintech': 'linear-gradient(90deg, #7C5CFF, #4F46E5)',
       },
       boxShadow: {
         glow: 'var(--shadow-glow)',

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   BookOpen,
   Briefcase,
@@ -94,7 +95,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
   };
 
   return (
-    <Card className={`min-h-[190px] rounded-[8px] border border-white/10 bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]`}>
+    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
       <CardHeader className="flex flex-row items-start justify-between gap-4 px-8">
         <div className="min-w-0">
           <CardTitle className="text-lg font-semibold">Recent Transactions</CardTitle>
@@ -114,21 +115,24 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
         ) : transactions.length === 0 ? (
           <p className="py-14 text-center text-muted-foreground">No transactions found</p>
         ) : (
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             {transactions.slice(0, 5).map((transaction) => {
               const Icon = categoryIcons[transaction.category] || Wallet;
               const isIncome = transaction.type === "income";
 
               return (
-                <div
+                <motion.div
                   key={transaction._id}
-                  className="group flex items-center justify-between gap-4 rounded-[8px] px-3 py-2 transition hover:bg-accent/50"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ x: 4 }}
+                  className="group flex items-center justify-between gap-4 rounded-2xl px-3 py-3 transition hover:bg-white/5"
                 >
                   <div className="flex min-w-0 items-center gap-4">
                     <div
                       className={`flex size-12 shrink-0 items-center justify-center rounded-full border ${isIncome
-                        ? "border-success/20 bg-success/10 text-success"
-                        : "border-danger/20 bg-danger/10 text-danger"
+                        ? "border-income/20 bg-income/10 text-income"
+                        : "border-expense/20 bg-expense/10 text-expense"
                         }`}
                     >
                       <Icon className="size-5" />
@@ -141,7 +145,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
 
                   <div className="flex shrink-0 items-center gap-4 text-right">
                     <div>
-                      <p className={`text-lg font-semibold ${isIncome ? "text-success" : "text-danger"}`}>
+                      <p className={`text-lg font-semibold ${isIncome ? "text-income" : "text-expense"}`}>
                         {isIncome ? "+" : "-"}₹{transaction.amount.toLocaleString("en-IN")}
                       </p>
                       <p className="text-sm text-muted-foreground">
@@ -159,7 +163,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
                       <Trash2 className="size-4" />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

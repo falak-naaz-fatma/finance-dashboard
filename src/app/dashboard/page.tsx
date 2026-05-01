@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 import {
   BarChart3,
@@ -9,7 +8,6 @@ import {
   LayoutDashboard,
   PiggyBank,
   Target,
-  WalletCards,
 } from "lucide-react";
 import AddTransactionForm from "@/components/AddTransactionForm";
 import TransactionList from "@/components/TransactionList";
@@ -18,6 +16,7 @@ import ExpensePieChart from "@/components/ExpensePieChart";
 import MonthlyBarChart from "@/components/MonthlyBarChart";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import SmartInsights from "@/components/SmartInsights";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: true },
@@ -54,15 +53,19 @@ export default function DashboardPage() {
       <div className="lg:pl-[280px]">
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
 
-        <main className="px-4 py-7 sm:px-8 lg:px-10">
+        <main className="px-4 pb-28 pt-7 sm:px-8 lg:px-10 lg:pb-10">
           <section className="mb-7">
             <h1 className="text-[30px] font-semibold leading-tight tracking-normal">
               Welcome back, <span className="text-primary">{userName.split(" ")[0]}</span>
             </h1>
-            <p className="mt-2 text-lg font-normal text-muted-foreground">Here's your financial snapshot for today</p>
+            <p className="mt-2 text-lg font-normal text-muted-foreground">Here&apos;s your financial snapshot for today</p>
           </section>
 
           <SummaryCards refresh={refresh} selectedMonth={selectedMonth} />
+
+          <section className="mt-7">
+            <SmartInsights refresh={refresh} />
+          </section>
 
           <section className="mt-7 grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(340px,0.98fr)]">
             <MonthlyBarChart refresh={refresh} />

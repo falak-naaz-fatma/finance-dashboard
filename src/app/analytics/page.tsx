@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import {
   BarChart3,
@@ -9,13 +8,13 @@ import {
   ClipboardList,
   LayoutDashboard,
   PiggyBank,
-  Search,
   Target,
   TrendingUp,
   WalletCards,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import SmartInsights from "@/components/SmartInsights";
 import { Card } from "@/components/ui/card";
 import { ResponsiveContainer as ChartContainer, Tooltip as ChartTooltip } from "recharts";
 import {
@@ -94,7 +93,33 @@ function monthKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
-function lastSixMonths() {
+function lastSixMonths(transactions: Transaction[]) {
+  // Get unique months from actual transaction data
+  const uniqueMonths = new Set<string>();
+  transactions.forEach((transaction) => {
+    const date = new Date(transaction.date);
+    uniqueMonths.add(date.toLocaleString("en-IN", { month: "short", year: "numeric" }));
+  });
+
+  // If we have transaction data, use those months
+  if (uniqueMonths.size > 0) {
+    const sortedMonths = Array.from(uniqueMonths).sort((a, b) => {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return dateA.getTime() - dateB.getTime(); // Ascending order (oldest first)
+    });
+
+    // Take up to 6 most recent months
+    return sortedMonths.slice(0, 6).map((monthStr) => {
+      const date = new Date(monthStr);
+      return {
+        key: monthKey(date),
+        label: monthStr,
+      };
+    });
+  }
+
+  // Fallback to last 6 months if no transaction data
   return Array.from({ length: 6 }, (_, index) => {
     const date = new Date();
     date.setDate(1);
@@ -145,7 +170,7 @@ export default function AnalyticsPage() {
     const income = transactions.filter((transaction) => transaction.type === "income");
     const byDay = new Map<number, number>();
     const byCategory = new Map<string, number>();
-    const months = lastSixMonths();
+    const months = lastSixMonths(transactions);
     const monthly = new Map<string, { income: number; expense: number }>();
 
     months.forEach((month) => monthly.set(month.key, { income: 0, expense: 0 }));
@@ -181,7 +206,10 @@ export default function AnalyticsPage() {
         };
       },
       { points: [], cumulative: 0 }
-    ).points;
+    ).points.map(point => ({
+      ...point,
+      balance: Math.round(point.balance) // Round to nearest integer
+    }));
 
     const topCategories: CategoryPoint[] = [...byCategory.entries()]
       .map(([category, amount]) => ({ category: categoryLabel(category), amount }))
@@ -219,7 +247,7 @@ export default function AnalyticsPage() {
       <div className="lg:pl-[280px]">
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
 
-        <main className="px-4 py-10 sm:px-8 lg:px-10">
+        <main className="px-4 pb-28 pt-10 sm:px-8 lg:px-10 lg:pb-10">
           <section className="mb-8">
             <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Analytics</h1>
             <p className="mt-2 text-sm font-normal text-muted-foreground">
@@ -228,7 +256,7 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Highest Expense Day</p>
@@ -243,7 +271,7 @@ export default function AnalyticsPage() {
               </div>
             </Card>
 
-            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Average Daily Spend</p>
@@ -258,7 +286,7 @@ export default function AnalyticsPage() {
               </div>
             </Card>
 
-            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Most Spent Category</p>
@@ -275,8 +303,12 @@ export default function AnalyticsPage() {
             </Card>
           </section>
 
+          <section className="mt-7">
+            <SmartInsights transactions={transactions} />
+          </section>
+
           <section className="mt-7 grid grid-cols-1 gap-5 xl:grid-cols-2">
-            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
               <h2 className="text-lg font-semibold">Balance Trend</h2>
               <p className="mt-2 text-sm text-muted-foreground">Cumulative balance over 6 months</p>
               <div className="mt-6 h-[300px] min-w-0">
@@ -287,6 +319,7 @@ export default function AnalyticsPage() {
                     <ReYAxis
                       axisLine={false}
                       tickLine={false}
+                      dataKey="balance"
                       tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
                       tickFormatter={(value) => {
                         if (Number(value) >= 100000) return `₹${Number(value) / 100000}L`;
@@ -309,14 +342,14 @@ export default function AnalyticsPage() {
                       stroke="hsl(var(--primary))"
                       strokeWidth={3}
                       dot={{ r: 5, fill: "hsl(var(--primary))", stroke: "hsl(var(--primary))", strokeWidth: 2 }}
-                      activeDot={{ r: 8, fill: "hsl(var(--primary))", stroke: "#fff", strokeWidth: 2 }}
+                      activeDot={{ r: 8, fill: "hsl(var(--primary))", stroke: "hsl(var(--foreground))", strokeWidth: 2 }}
                     />
                   </ReLineChart>
                 </ChartContainer>
               </div>
             </Card>
 
-            <Card className="rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+            <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
               <h2 className="text-lg font-semibold">Top 5 Categories</h2>
               <p className="mt-2 text-sm text-muted-foreground">Highest spending this month</p>
               <div className="mt-6 h-[300px] min-w-0">
@@ -373,7 +406,7 @@ export default function AnalyticsPage() {
             </Card>
           </section>
 
-          <Card className="mt-7 rounded-[8px] border border-white/10 bg-card p-7 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+          <Card className="glow-shell mt-7 rounded-2xl border border-white/10 bg-card/60 p-7 shadow-card backdrop-blur-xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-lg font-semibold">Spending Activity</h2>

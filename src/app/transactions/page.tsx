@@ -1,12 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useMemo, useState, useRef } from "react";
-import { BarChart3, LayoutDashboard, PiggyBank, Plus, Search, Target, WalletCards } from "lucide-react";
+import { BarChart3, LayoutDashboard, PiggyBank, Search, Target } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import AddTransactionForm from "@/components/AddTransactionForm";
 import TransactionTable from "@/components/TransactionTable";
 
 const navItems = [
@@ -29,10 +26,9 @@ function getInitials(name?: string | null, email?: string | null) {
 
 export default function TransactionsPage() {
   const { data: session } = useSession();
-  const [refresh, setRefresh] = useState(false);
-  const [selectedMonth] = useState("");
+  const refresh = false;
+  const selectedMonth = "";
 
-  const handleSuccess = () => setRefresh((prev) => !prev);
   const userName = session?.user?.name || "Aarav Sharma";
   const userEmail = session?.user?.email || "aarav@fintrack.io";
   const initials = getInitials(userName, userEmail) || "AS";
@@ -44,7 +40,7 @@ export default function TransactionsPage() {
       <div className="lg:pl-[280px]">
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
 
-        <main className="px-4 py-10 sm:px-8 lg:px-10">
+        <main className="px-4 pb-28 pt-10 sm:px-8 lg:px-10 lg:pb-10">
           <section className="mb-8 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-[30px] font-semibold leading-tight tracking-normal">Transactions</h1>

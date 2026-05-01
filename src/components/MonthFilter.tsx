@@ -21,7 +21,7 @@ export default function MonthFilter({ selectedMonth, onChange }: Props) {
     });
 
     return (
-        <Card className="w-full">
+        <Card className="w-full rounded-2xl border border-white/10 bg-card/60 shadow-card backdrop-blur-xl">
             <CardContent className="pt-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <p className="text-sm font-medium text-muted-foreground whitespace-nowrap">

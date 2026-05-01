@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 import {
     BookOpen,
     Briefcase,
@@ -11,12 +12,11 @@ import {
     Plane,
     ReceiptText,
     ShoppingBag,
-    Trash2,
     Utensils,
     Wallet,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 type Transaction = {
     _id: string;
@@ -93,20 +93,6 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
         setSelectedMonthState(month);
     };
 
-    const handleDelete = async (id: string) => {
-        const confirmDelete = window.confirm("Delete this transaction?");
-        if (!confirmDelete) return;
-
-        try {
-            const res = await fetch(`/api/transactions/${id}`, { method: "DELETE" });
-            if (res.ok) {
-                setTransactions((prev) => prev.filter((t) => t._id !== id));
-            }
-        } catch (error) {
-            console.error("Error deleting transaction:", error);
-        }
-    };
-
     const filteredTransactions = transactions.filter((transaction) => {
         const matchesSearch =
             !searchTerm ||
@@ -118,14 +104,14 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
     });
 
     return (
-        <Card className="min-h-[400px] rounded-[8px] border border-border bg-card py-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+        <Card className="min-h-[400px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
             <CardContent className="px-6">
                 <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="relative flex-1">
                         <input
                             type="text"
                             placeholder="Search by category or description..."
-                            className="h-10 w-full rounded-[12px] border border-border bg-background px-4 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/80 focus:ring-4 focus:ring-primary/20"
+                            className="h-10 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/80 focus:ring-4 focus:ring-primary/20"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -178,8 +164,8 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[800px]">
-                            <thead>
-                                <tr className="border-b border-border text-left text-sm font-medium text-muted-foreground">
+                            <thead className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl">
+                                <tr className="border-b border-white/10 text-left text-sm font-medium text-muted-foreground">
                                     <th className="px-4 py-3">Date</th>
                                     <th className="px-4 py-3">Category</th>
                                     <th className="px-4 py-3">Description</th>
@@ -193,9 +179,11 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
                                     const isIncome = transaction.type === "income";
 
                                     return (
-                                        <tr
+                                        <motion.tr
                                             key={transaction._id}
-                                            className="border-b border-border/50 transition hover:bg-accent/20"
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="border-b border-white/10 transition hover:bg-white/5"
                                         >
                                             <td className="px-4 py-4">
                                                 <p className="text-sm font-medium">
@@ -208,7 +196,7 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
                                             </td>
                                             <td className="px-4 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    <div className={`flex size-8 items-center justify-center rounded-md ${isIncome ? "bg-success/10" : "bg-danger/10"}`}>
+                                                    <div className={`flex size-8 items-center justify-center rounded-md ${isIncome ? "bg-income/10 text-income" : "bg-expense/10 text-expense"}`}>
                                                         <Icon className="size-4" />
                                                     </div>
                                                     <span className="text-sm font-medium capitalize">{transaction.category}</span>
@@ -219,18 +207,18 @@ export default function TransactionTable({ refresh, selectedMonth }: Props) {
                                             </td>
                                             <td className="px-4 py-4">
                                                 <span className={`rounded-full px-3 py-1 text-xs font-semibold ${isIncome
-                                                    ? "bg-success/15 text-success"
-                                                    : "bg-danger/15 text-danger"
+                                                    ? "bg-income/15 text-income"
+                                                    : "bg-expense/15 text-expense"
                                                     }`}>
                                                     {transaction.type.toUpperCase()}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-4 text-right">
-                                                <p className={`text-sm font-semibold ${isIncome ? "text-success" : "text-danger"}`}>
+                                                <p className={`text-sm font-semibold ${isIncome ? "text-income" : "text-expense"}`}>
                                                     {isIncome ? "+" : ""}₹{transaction.amount.toLocaleString("en-IN")}
                                                 </p>
                                             </td>
-                                        </tr>
+                                        </motion.tr>
                                     );
                                 })}
                             </tbody>
