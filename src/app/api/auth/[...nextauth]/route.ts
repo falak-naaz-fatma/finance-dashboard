@@ -49,10 +49,41 @@ const handler = NextAuth({
     ],
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
+        async signIn({ user, account }) {
+            if (account?.provider === "google") {
+                try {
+                    await connectDB();
+                    const userExists = await User.findOne({ email: user.email });
+
+                    if (!userExists) {
+                        await User.create({
+                            email: user.email,
+                            name: user.name,
+                            image: user.image,
+                            provider: "google",
+                            providerId: account.providerAccountId,
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error during sign in:", error);
+                    return false;
+                }
+            }
+            return true;
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                await connectDB();
+                const dbUser = await User.findOne({ email: token.email });
+                if (dbUser) {
+                    token.id = dbUser._id.toString();
+                }
+            }
+            return token;
+        },
         async session({ session, token }) {
-            // Add user id to session so we can use it later
             if (session.user) {
-                (session.user as any).id = token.sub;
+                (session.user as any).id = token.id;
             }
             return session;
         }
