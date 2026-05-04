@@ -83,7 +83,6 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
       transition={{ type: "spring", stiffness: 180, damping: 22 }}
     >
     <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">

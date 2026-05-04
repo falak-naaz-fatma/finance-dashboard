@@ -1,5 +1,8 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { motion } from "framer-motion"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -50,16 +53,30 @@ function Button({
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot.Root : "button"
+}) {
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      />
+    )
+  }
+
+  const motionProps = props as React.ComponentProps<typeof motion.button>
 
   return (
-    <Comp
+    <motion.button
       data-slot="button"
       data-variant={variant}
       data-size={size}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
+      {...motionProps}
     />
   )
 }

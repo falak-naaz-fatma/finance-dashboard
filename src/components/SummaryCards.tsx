@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import CountUp from "react-countup";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -22,11 +23,19 @@ type Props = {
   selectedMonth: string;
 };
 
-const rupee = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
+const container: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+};
 
 export default function SummaryCards({ refresh, selectedMonth }: Props) {
   const { data: session } = useSession();
@@ -79,7 +88,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
   const cards = [
     {
       title: "Total Balance",
-      value: rupee.format(summary.balance),
+      value: summary.balance,
+      prefix: "₹",
       change: "+12%",
       color: "text-info",
       trend: "up",
@@ -87,7 +97,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
     },
     {
       title: "Total Income",
-      value: rupee.format(summary.totalIncome),
+      value: summary.totalIncome,
+      prefix: "₹",
       change: "+8%",
       color: "text-income",
       trend: "up",
@@ -95,7 +106,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
     },
     {
       title: "Total Expense",
-      value: rupee.format(summary.totalExpense),
+      value: summary.totalExpense,
+      prefix: "₹",
       change: "-3%",
       color: "text-expense",
       trend: "down",
@@ -103,7 +115,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
     },
     {
       title: "Savings Rate",
-      value: `${savingsRate}%`,
+      value: savingsRate,
+      suffix: "%",
       change: "+5%",
       color: "text-primary",
       trend: "up",
@@ -112,18 +125,35 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
   ];
 
   return (
-    <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card) => {
+    <motion.section
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+    >
+      {cards.map((card, index) => {
         const isDown = card.trend === "down";
         return (
           <motion.div
             key={card.title}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            variants={item}
+            className="rounded-2xl"
           >
+            <motion.div
+              animate={
+                index === 0
+                  ? {
+                      boxShadow: [
+                        "0 0 0px rgba(124,92,255,0)",
+                        "0 0 20px rgba(124,92,255,0.3)",
+                        "0 0 0px rgba(124,92,255,0)",
+                      ],
+                    }
+                  : undefined
+              }
+              transition={index === 0 ? { duration: 3, repeat: Infinity } : undefined}
+              className="rounded-2xl"
+            >
             <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
               <CardContent className="flex h-full flex-col px-5">
               <div className="flex items-center justify-between">
@@ -142,7 +172,11 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
               {loading ? (
                 <div className="mt-7 h-10 w-40 animate-pulse rounded-xl bg-white/10" />
               ) : (
-                <p className={`mt-4 text-[30px] font-semibold leading-none tracking-normal ${card.color}`}>{card.value}</p>
+                <p className={`mt-4 text-[30px] font-semibold leading-none tracking-normal ${card.color}`}>
+                  {card.prefix}
+                  <CountUp end={card.value} duration={1.2} separator="," preserveValue />
+                  {card.suffix}
+                </p>
               )}
 
               {card.ring !== undefined ? (
@@ -169,9 +203,10 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
               )}
               </CardContent>
             </Card>
+            </motion.div>
           </motion.div>
         );
       })}
-    </section>
+    </motion.section>
   );
 }

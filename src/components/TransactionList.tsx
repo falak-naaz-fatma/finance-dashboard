@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
   Briefcase,
@@ -115,7 +115,8 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
         ) : transactions.length === 0 ? (
           <p className="py-14 text-center text-muted-foreground">No transactions found</p>
         ) : (
-          <div className="flex flex-col gap-3">
+          <motion.div layout className="flex flex-col gap-3">
+            <AnimatePresence initial={false}>
             {transactions.slice(0, 5).map((transaction) => {
               const Icon = categoryIcons[transaction.category] || Wallet;
               const isIncome = transaction.type === "income";
@@ -123,10 +124,13 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
               return (
                 <motion.div
                   key={transaction._id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  layout
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
                   whileHover={{ x: 4 }}
-                  className="group flex items-center justify-between gap-4 rounded-2xl px-3 py-3 transition hover:bg-white/5"
+                  transition={{ duration: 0.3 }}
+                  className="group flex items-center justify-between gap-4 rounded-2xl px-3 py-3 transition-all duration-300 ease-in-out hover:bg-white/5"
                 >
                   <div className="flex min-w-0 items-center gap-4">
                     <div
@@ -166,7 +170,8 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
                 </motion.div>
               );
             })}
-          </div>
+            </AnimatePresence>
+          </motion.div>
         )}
       </CardContent>
     </Card>

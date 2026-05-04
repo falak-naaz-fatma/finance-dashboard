@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   BarChart3,
   ClipboardList,
@@ -47,7 +48,12 @@ export default function DashboardPage() {
   const initials = getInitials(userName, userEmail) || "AS";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="min-h-screen bg-background text-foreground"
+    >
       <Sidebar navItems={navItems} />
 
       <div className="lg:pl-[280px]">
@@ -78,6 +84,6 @@ export default function DashboardPage() {
           </section>
         </main>
       </div>
-    </div>
+    </motion.div>
   );
 }
