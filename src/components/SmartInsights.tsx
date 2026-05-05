@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
-import { Lightbulb, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Zap, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 type Transaction = {
   type: "income" | "expense";
@@ -43,7 +43,7 @@ function label(category: string) {
 export default function SmartInsights({ transactions, refresh }: Props) {
   const { data: session } = useSession();
   const [insights, setInsights] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchInsights = async () => {
@@ -64,12 +64,7 @@ export default function SmartInsights({ transactions, refresh }: Props) {
       }
     };
 
-    if (session) {
-      fetchInsights();
-      return;
-    }
-
-    setLoading(false);
+    if (session) fetchInsights();
   }, [session, refresh]);
 
   const localInsights = useMemo(() => {
@@ -122,20 +117,20 @@ export default function SmartInsights({ transactions, refresh }: Props) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 170, damping: 22 }}
     >
-      <Card className="glow-shell rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
-        <CardHeader className="flex-row items-center justify-between px-6">
+      <GlassCard className="p-5">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <Lightbulb className="size-5 text-primary" />
-              Smart Insights
-            </CardTitle>
+            <h3 className="flex items-center gap-2 text-lg font-semibold">
+              <Zap className="size-5 text-primary" />
+              <span className="gradient-text">AI Insights</span>
+            </h3>
             <p className="mt-1 text-sm text-muted-foreground">Signals from your spending patterns</p>
           </div>
-        </CardHeader>
-        <CardContent className="grid gap-3 px-6 md:grid-cols-3">
+        </div>
+        <div className="grid gap-3 md:grid-cols-3">
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div key={index} className="rounded-xl border border-border bg-gradient-to-r from-purple-500/10 to-indigo-500/10 p-4">
                   <Skeleton height={18} baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
                   <Skeleton height={14} width="70%" baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
                 </div>
@@ -149,7 +144,7 @@ export default function SmartInsights({ transactions, refresh }: Props) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.15 }}
                     whileHover={{ y: -3 }}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                    className="rounded-xl border border-border bg-gradient-to-r from-purple-500/10 to-indigo-500/10 p-4 text-sm transition-all duration-300 ease-out hover:shadow-xl"
                   >
                     {index === 0 ? (
                       <Sparkles className="mb-3 size-5 text-primary" />
@@ -160,8 +155,8 @@ export default function SmartInsights({ transactions, refresh }: Props) {
                   </motion.div>
                 );
               })}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassCard>
     </motion.div>
   );
 }

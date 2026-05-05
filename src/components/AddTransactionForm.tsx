@@ -85,14 +85,14 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 180, damping: 22 }}
     >
-    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
+    <Card className="glow-shell min-h-[190px] rounded-2xl border border-border bg-white/70 py-5 shadow-card backdrop-blur-xl dark:bg-white/5">
       <CardHeader className="px-8">
-        <CardTitle className="text-lg font-semibold">Add Transaction</CardTitle>
+        <CardTitle className="text-lg font-semibold gradient-text">Add Transaction</CardTitle>
         <p className="text-sm font-normal text-muted-foreground">Track a new income or expense</p>
       </CardHeader>
       <CardContent className="px-8">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          <div className="grid rounded-2xl border border-white/10 bg-white/5 p-1 sm:grid-cols-2">
+          <div className="grid rounded-2xl border border-border bg-muted/60 p-1 sm:grid-cols-2">
             {(["income", "expense"] as const).map((type) => (
               <button
                 key={type}
@@ -107,7 +107,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                   ? type === "income"
                     ? "bg-income text-background"
                     : "bg-expense text-white"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:bg-white/60 hover:text-foreground dark:hover:bg-white/5"
                   }`}
               >
                 {type}
@@ -131,7 +131,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                     }}
                     className={`flex h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition ${active
                       ? "border-primary bg-primary/15 text-primary"
-                      : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                      : "border-border bg-white/50 text-muted-foreground hover:bg-white/80 hover:text-foreground dark:bg-white/5 dark:hover:bg-white/10"
                       }`}
                   >
                     <Tags className="size-4" />
@@ -150,7 +150,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
               <Input
                 type="number"
                 placeholder="0"
-                className="h-12 rounded-xl border border-white/10 bg-white/5 pl-10 text-lg font-normal text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/70 focus:ring-2 focus:ring-primary/30"
+                className="h-12 rounded-xl border border-border bg-white/60 pl-10 text-lg font-normal text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/70 focus:ring-2 focus:ring-primary/30 dark:bg-white/5"
                 {...register("amount", { valueAsNumber: true })}
               />
             </div>
@@ -162,7 +162,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
             <Input
               type="text"
               placeholder="e.g. Lunch with team"
-              className="h-12 rounded-xl border border-white/10 bg-white/5 px-4 text-lg font-normal text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/70 focus:ring-2 focus:ring-primary/30"
+              className="h-12 rounded-xl border border-border bg-white/60 px-4 text-lg font-normal text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/70 focus:ring-2 focus:ring-primary/30 dark:bg-white/5"
               {...register("description")}
             />
           </div>
@@ -173,7 +173,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
               <CalendarDays className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="date"
-                className="h-12 rounded-xl border border-white/10 bg-white/5 pl-10 text-lg font-normal text-foreground outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/30"
+                className="h-12 rounded-xl border border-border bg-white/60 pl-10 text-lg font-normal text-foreground outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/30 dark:bg-white/5"
                 {...register("date")}
               />
             </div>
@@ -183,7 +183,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
           <Button
             type="submit"
             disabled={loading}
-            className="mt-1 h-14 rounded-xl bg-gradient-fintech text-base font-semibold text-white shadow-glow transition hover:scale-[1.01] hover:opacity-95"
+            className="mt-1 h-14 rounded-xl bg-gradient-fintech text-base font-semibold text-white shadow-glow transition-all duration-300 ease-out hover:scale-[1.03] hover:opacity-95 hover:shadow-xl"
           >
             {loading ? "Adding..." : "Add Transaction"}
           </Button>

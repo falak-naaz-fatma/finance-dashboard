@@ -18,7 +18,7 @@ import {
   Wallet,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 type Transaction = {
   _id: string;
@@ -95,21 +95,21 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
   };
 
   return (
-    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
-      <CardHeader className="flex flex-row items-start justify-between gap-4 px-8">
+    <GlassCard className="min-h-[190px] p-6">
+      <div className="mb-4 flex flex-row items-start justify-between gap-4">
         <div className="min-w-0">
-          <CardTitle className="text-lg font-semibold">Recent Transactions</CardTitle>
+          <h3 className="text-lg font-semibold gradient-text">Recent Transactions</h3>
           <p className="mt-1 text-sm font-normal text-muted-foreground">Your latest activity</p>
         </div>
         <button
-          className="shrink-0 pt-1 text-sm font-medium text-primary transition hover:text-primary/80"
+          className="shrink-0 rounded-xl px-3 py-2 text-sm font-medium text-primary transition-all duration-300 ease-out hover:bg-muted hover:text-primary/80 hover:shadow-xl"
           onClick={handleViewAll}
         >
           View All
         </button>
-      </CardHeader>
+      </div>
 
-      <CardContent className="px-8">
+      <div>
         {loading ? (
           <p className="py-14 text-center text-muted-foreground">Loading...</p>
         ) : transactions.length === 0 ? (
@@ -130,7 +130,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
                   exit={{ opacity: 0, x: 20 }}
                   whileHover={{ x: 4 }}
                   transition={{ duration: 0.3 }}
-                  className="group flex items-center justify-between gap-4 rounded-2xl px-3 py-3 transition-all duration-300 ease-in-out hover:bg-white/5"
+                  className="group flex items-center justify-between gap-4 rounded-xl p-3 backdrop-blur transition-all duration-300 ease-out hover:bg-white/50 hover:shadow-xl dark:hover:bg-white/5"
                 >
                   <div className="flex min-w-0 items-center gap-4">
                     <div
@@ -161,7 +161,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
                     </div>
                     <button
                       onClick={() => handleDelete(transaction._id)}
-                      className="rounded-lg p-2 text-muted-foreground opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100"
+                    className="rounded-lg p-2 text-muted-foreground opacity-0 transition-all duration-300 hover:bg-danger/10 hover:text-danger group-hover:opacity-100"
                       title="Delete transaction"
                     >
                       <Trash2 className="size-4" />
@@ -173,7 +173,7 @@ export default function TransactionList({ refresh, selectedMonth }: Props) {
             </AnimatePresence>
           </motion.div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </GlassCard>
   );
 }

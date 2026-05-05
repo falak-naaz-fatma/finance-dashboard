@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion, type Variants } from "framer-motion";
 import CountUp from "react-countup";
@@ -23,6 +23,18 @@ type Props = {
   selectedMonth: string;
 };
 
+type CardConfig = {
+  title: string;
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  change: string;
+  color: string;
+  trend: string;
+  spark?: string;
+  ring?: number;
+};
+
 const container: Variants = {
   hidden: {},
   show: {
@@ -36,6 +48,76 @@ const item: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
+
+const StatCard = React.memo(function StatCard({
+  card,
+  index,
+  loading,
+}: {
+  card: CardConfig;
+  index: number;
+  loading: boolean;
+}) {
+  const isDown = card.trend === "down";
+
+  return (
+    <motion.div
+      key={card.title}
+      variants={item}
+      className="rounded-2xl"
+    >
+      <Card className="glow-shell min-h-[190px] rounded-2xl border border-border bg-white/70 py-5 shadow-card backdrop-blur-xl hover:border-purple-400/30 dark:bg-white/5">
+        <CardContent className="flex h-full flex-col px-5">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-normal text-muted-foreground">{card.title}</p>
+          <span
+                className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-semibold ${isDown
+              ? "border-expense/30 bg-expense/15 text-expense"
+              : "border-income/25 bg-income/15 text-income"
+              }`}
+          >
+            {isDown ? <ArrowDownRight className="size-4" /> : <ArrowUpRight className="size-4" />}
+            {card.change}
+          </span>
+        </div>
+
+        {loading ? (
+          <div className="mt-7 h-10 w-40 animate-pulse rounded-xl bg-white/10" />
+        ) : (
+          <p className={`mt-4 text-[30px] font-semibold leading-none tracking-normal ${index === 0 || index === 3 ? "gradient-text" : card.color}`}>
+            {card.prefix}
+            <CountUp end={card.value} duration={1.2} separator="," preserveValue />
+            {card.suffix}
+          </p>
+        )}
+
+        {card.ring !== undefined ? (
+          <div className="mt-auto flex justify-center pb-1">
+            <div
+              className="size-20 rounded-full"
+              style={{
+                background: `conic-gradient(hsl(var(--primary)) ${Math.min(card.ring, 100) * 3.6}deg, rgb(var(--card)) 0deg)`,
+              }}
+            >
+              <div className="m-2 size-16 rounded-full bg-background/80 backdrop-blur" />
+            </div>
+          </div>
+        ) : (
+          <svg viewBox="0 0 136 46" className="mt-auto h-16 w-full overflow-visible">
+            <path
+              d={`${card.spark} L134 46 L1 46 Z`}
+              fill="currentColor"
+              className={card.color}
+              opacity="0.12"
+            />
+            <path d={card.spark} fill="none" stroke="currentColor" strokeWidth="2.5" className={card.color} />
+          </svg>
+        )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+});
 
 export default function SummaryCards({ refresh, selectedMonth }: Props) {
   const { data: session } = useSession();
@@ -80,12 +162,14 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
     if (session) fetchSummary();
   }, [session, refresh, selectedMonth]);
 
-  const savingsRate =
+  const savingsRate = useMemo(() =>
     summary.totalIncome > 0
       ? Math.max(0, Math.round(((summary.totalIncome - summary.totalExpense) / summary.totalIncome) * 100))
-      : 0;
+      : 0,
+    [summary.totalExpense, summary.totalIncome]
+  );
 
-  const cards = [
+  const cards = useMemo<CardConfig[]>(() => [
     {
       title: "Total Balance",
       value: summary.balance,
@@ -122,7 +206,7 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
       trend: "up",
       ring: savingsRate,
     },
-  ];
+  ], [savingsRate, summary.balance, summary.totalExpense, summary.totalIncome]);
 
   return (
     <motion.section
@@ -132,79 +216,8 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
       className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
     >
       {cards.map((card, index) => {
-        const isDown = card.trend === "down";
         return (
-          <motion.div
-            key={card.title}
-            variants={item}
-            className="rounded-2xl"
-          >
-            <motion.div
-              animate={
-                index === 0
-                  ? {
-                      boxShadow: [
-                        "0 0 0px rgba(124,92,255,0)",
-                        "0 0 20px rgba(124,92,255,0.3)",
-                        "0 0 0px rgba(124,92,255,0)",
-                      ],
-                    }
-                  : undefined
-              }
-              transition={index === 0 ? { duration: 3, repeat: Infinity } : undefined}
-              className="rounded-2xl"
-            >
-            <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
-              <CardContent className="flex h-full flex-col px-5">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-normal text-muted-foreground">{card.title}</p>
-                <span
-                      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-semibold ${isDown
-                    ? "border-expense/30 bg-expense/15 text-expense"
-                    : "border-income/25 bg-income/15 text-income"
-                    }`}
-                >
-                  {isDown ? <ArrowDownRight className="size-4" /> : <ArrowUpRight className="size-4" />}
-                  {card.change}
-                </span>
-              </div>
-
-              {loading ? (
-                <div className="mt-7 h-10 w-40 animate-pulse rounded-xl bg-white/10" />
-              ) : (
-                <p className={`mt-4 text-[30px] font-semibold leading-none tracking-normal ${card.color}`}>
-                  {card.prefix}
-                  <CountUp end={card.value} duration={1.2} separator="," preserveValue />
-                  {card.suffix}
-                </p>
-              )}
-
-              {card.ring !== undefined ? (
-                <div className="mt-auto flex justify-center pb-1">
-                  <div
-                    className="size-20 rounded-full"
-                    style={{
-                      background: `conic-gradient(hsl(var(--primary)) ${Math.min(card.ring, 100) * 3.6}deg, hsl(var(--card)) 0deg)`,
-                    }}
-                  >
-                    <div className="m-2 size-16 rounded-full bg-background/80 backdrop-blur" />
-                  </div>
-                </div>
-              ) : (
-                <svg viewBox="0 0 136 46" className="mt-auto h-16 w-full overflow-visible">
-                  <path
-                    d={`${card.spark} L134 46 L1 46 Z`}
-                    fill="currentColor"
-                    className={card.color}
-                    opacity="0.12"
-                  />
-                  <path d={card.spark} fill="none" stroke="currentColor" strokeWidth="2.5" className={card.color} />
-                </svg>
-              )}
-              </CardContent>
-            </Card>
-            </motion.div>
-          </motion.div>
+          <StatCard key={card.title} card={card} index={index} loading={loading} />
         );
       })}
     </motion.section>

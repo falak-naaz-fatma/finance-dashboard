@@ -314,7 +314,7 @@ export default function AnalyticsPage() {
               <div className="mt-6 h-[300px] min-w-0">
                 <ChartContainer width="100%" height="100%" minWidth={0}>
                   <ReLineChart data={analytics.balanceTrend} margin={{ top: 10, right: 12, bottom: 4, left: 10 }}>
-                    <ReCartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 5" strokeOpacity={0.1} />
+                    <ReCartesianGrid vertical={false} stroke="rgb(var(--border))" strokeDasharray="4 5" strokeOpacity={0.1} />
                     <ReXAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
                     <ReYAxis
                       axisLine={false}
@@ -329,8 +329,8 @@ export default function AnalyticsPage() {
                     />
                     <ChartTooltip
                       contentStyle={{
-                        background: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
+                        background: "rgb(var(--card))",
+                        border: "1px solid rgb(var(--border))",
                         borderRadius: "12px",
                         color: "hsl(var(--foreground))",
                       }}
@@ -359,7 +359,7 @@ export default function AnalyticsPage() {
                     layout="vertical"
                     margin={{ top: 8, right: 12, bottom: 8, left: 40 }}
                   >
-                    <ReCartesianGrid horizontal={false} stroke="hsl(var(--border))" strokeDasharray="4 5" strokeOpacity={0.08} />
+                    <ReCartesianGrid horizontal={false} stroke="rgb(var(--border))" strokeDasharray="4 5" strokeOpacity={0.08} />
                     <ReXAxis
                       type="number"
                       axisLine={false}
@@ -388,8 +388,8 @@ export default function AnalyticsPage() {
                     />
                     <ChartTooltip
                       contentStyle={{
-                        background: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
+                        background: "rgb(var(--card))",
+                        border: "1px solid rgb(var(--border))",
                         borderRadius: "12px",
                         color: "hsl(var(--foreground))",
                       }}
@@ -418,7 +418,7 @@ export default function AnalyticsPage() {
                   <span
                     key={level}
                     className="size-3 rounded-full"
-                    style={{ backgroundColor: level === 0 ? "hsl(var(--card))" : `hsl(var(--primary) / ${0.18 + level * 0.14})` }}
+                    style={{ backgroundColor: level === 0 ? "rgb(var(--card))" : `hsl(var(--primary) / ${0.18 + level * 0.14})` }}
                   />
                 ))}
                 <span>More</span>
@@ -429,7 +429,7 @@ export default function AnalyticsPage() {
                 <span
                   key={index}
                   className="size-5 rounded-full border border-border/20"
-                  style={{ backgroundColor: level === 0 ? "hsl(var(--card))" : `hsl(var(--primary) / ${0.2 + level * 0.13})` }}
+                  style={{ backgroundColor: level === 0 ? "rgb(var(--card))" : `hsl(var(--primary) / ${0.2 + level * 0.13})` }}
                 />
               ))}
             </div>

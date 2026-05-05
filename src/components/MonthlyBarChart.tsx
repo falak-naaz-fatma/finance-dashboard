@@ -13,7 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { ChevronDown } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 type MonthlyData = {
   month: string;
@@ -95,18 +95,18 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3, duration: 0.45 }}
     >
-    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
-      <CardHeader className="flex-row items-start justify-between px-8">
+    <GlassCard className="min-h-[190px] p-6">
+      <div className="mb-4 flex items-start justify-between gap-4">
         <div>
-          <CardTitle className="text-lg font-semibold">Monthly Overview</CardTitle>
+          <h3 className="text-lg font-semibold gradient-text">Monthly Overview</h3>
           <p className="mt-1 text-sm font-normal text-muted-foreground">Income vs Expense comparison</p>
         </div>
-        <button className="flex h-10 min-w-28 items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 text-base font-semibold text-foreground transition hover:bg-white/10">
+        <button className="flex h-10 min-w-28 items-center justify-between rounded-xl border border-border bg-muted px-4 text-base font-semibold text-foreground transition-all duration-300 ease-out hover:bg-muted/70 hover:shadow-xl">
           6M
           <ChevronDown className="size-4 text-muted-foreground" />
         </button>
-      </CardHeader>
-      <CardContent className="px-8">
+      </div>
+      <div>
         {loading ? (
           <div className="flex h-[340px] items-center justify-center text-muted-foreground">Loading chart...</div>
         ) : data.length === 0 ? (
@@ -126,7 +126,7 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
                       <stop offset="100%" stopColor="#EF4444" stopOpacity={0.18} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 8" strokeOpacity={0.1} />
+                  <CartesianGrid vertical={false} stroke="rgb(var(--border))" strokeDasharray="3 8" strokeOpacity={0.1} />
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 15 }} />
                   <YAxis
                     axisLine={false}
@@ -142,7 +142,7 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
                     cursor={{ fill: "hsl(var(--accent) / 0.45)" }}
                     contentStyle={{
                       background: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
+                      border: "1px solid rgb(var(--border))",
                       borderRadius: "8px",
                       color: "hsl(var(--popover-foreground))",
                     }}
@@ -163,8 +163,8 @@ export default function MonthlyBarChart({ refresh }: { refresh: boolean }) {
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </GlassCard>
     </motion.div>
   );
 }

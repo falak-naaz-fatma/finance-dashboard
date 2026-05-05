@@ -19,7 +19,7 @@ type SidebarProps = {
 export default function Sidebar({ navItems }: SidebarProps) {
     return (
         <>
-            <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-white/10 bg-white/5 backdrop-blur-xl lg:flex lg:flex-col">
+            <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-border bg-[rgb(var(--sidebar))] backdrop-blur-xl lg:flex lg:flex-col">
                 <div className="flex items-center gap-3 px-7 py-8">
                     <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-fintech text-white shadow-glow">
                         <WalletCards className="size-5" />
@@ -37,12 +37,12 @@ export default function Sidebar({ navItems }: SidebarProps) {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className={`group flex h-12 items-center gap-3 rounded-2xl px-4 text-left text-sm font-semibold transition-all duration-300 hover:translate-x-1 ${item.active
+                                className={`group flex h-12 items-center gap-3 rounded-xl px-4 text-left text-sm font-semibold transition-all duration-300 ease-out hover:translate-x-1 hover:shadow-xl ${item.active
                                     ? "bg-gradient-fintech text-white shadow-glow"
-                                    : "text-sidebar-foreground hover:bg-white/10 hover:text-foreground"
+                                    : "text-sidebar-foreground hover:bg-white/60 hover:text-foreground dark:hover:bg-white/5"
                                     }`}
                             >
-                                <Icon className="size-4 transition-transform duration-300 group-hover:scale-110" />
+                                <Icon className={`size-4 transition-transform duration-300 group-hover:scale-110 ${item.active ? "text-white" : "group-hover:text-primary"}`} />
                                 {item.label}
                             </Link>
                         );
@@ -50,7 +50,7 @@ export default function Sidebar({ navItems }: SidebarProps) {
                 </nav>
             </aside>
 
-            <nav className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between rounded-2xl border border-white/10 bg-background/80 p-2 shadow-card backdrop-blur-xl lg:hidden">
+            <nav className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between rounded-2xl border border-border bg-sidebar/90 p-2 shadow-card backdrop-blur-xl lg:hidden">
                 {navItems.slice(0, 5).map((item) => {
                     const Icon = item.icon;
                     return (
@@ -58,8 +58,8 @@ export default function Sidebar({ navItems }: SidebarProps) {
                             key={item.label}
                             href={item.href}
                             className={`flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold transition ${item.active
-                                ? "bg-primary text-primary-foreground"
-                                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                                ? "bg-gradient-fintech text-white"
+                                : "text-muted-foreground hover:bg-white/60 hover:text-foreground dark:hover:bg-white/5"
                                 }`}
                         >
                             <Icon className="size-4" />

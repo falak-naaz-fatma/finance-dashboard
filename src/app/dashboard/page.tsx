@@ -52,17 +52,21 @@ export default function DashboardPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="min-h-screen bg-background text-foreground"
+      className="min-h-screen bg-[rgb(var(--background))] text-foreground"
     >
       <Sidebar navItems={navItems} />
 
-      <div className="lg:pl-[280px]">
+      <div className="relative min-h-screen bg-[rgb(var(--background))] lg:pl-[280px]">
+        <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
+          <div className="absolute left-10 top-10 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+        </div>
         <Header userName={userName} userEmail={userEmail} initials={initials} onLogout={() => signOut()} />
 
-        <main className="px-4 pb-28 pt-7 sm:px-8 lg:px-10 lg:pb-10">
+        <main className="relative z-10 px-4 pb-28 pt-7 sm:px-8 lg:px-10 lg:pb-10">
           <section className="mb-7">
             <h1 className="text-[30px] font-semibold leading-tight tracking-normal">
-              Welcome back, <span className="text-primary">{userName.split(" ")[0]}</span>
+              Welcome back, <span className="gradient-text">{userName.split(" ")[0]}</span>
             </h1>
             <p className="mt-2 text-lg font-normal text-muted-foreground">Here&apos;s your financial snapshot for today</p>
           </section>

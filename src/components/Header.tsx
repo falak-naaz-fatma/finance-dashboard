@@ -11,21 +11,21 @@ type HeaderProps = {
 
 export default function Header({ userName, userEmail, initials, onLogout }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-background/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-border bg-background/75 backdrop-blur-xl">
       <div className="flex h-[72px] items-center gap-4 px-4 sm:px-8 lg:px-10">
         <div className="relative w-full max-w-[560px] flex-1">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             placeholder="Search transactions, categories..."
-            className="h-10 w-full rounded-2xl border border-white/10 bg-white/5 px-10 text-sm font-medium text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary/70 focus:shadow-glow focus:ring-4 focus:ring-primary/15"
+            className="h-10 w-full rounded-2xl border border-border bg-white/70 px-10 text-sm font-medium text-foreground outline-none transition-all duration-300 ease-out placeholder:text-muted-foreground focus:border-primary/70 focus:shadow-glow focus:ring-4 focus:ring-primary/15 dark:bg-white/5"
           />
         </div>
 
         <div className="ml-auto flex items-center gap-3">
           <button
             type="button"
-            className="group relative rounded-full p-2 text-muted-foreground transition hover:bg-white/10 hover:text-foreground"
+            className="group relative rounded-full p-2 text-muted-foreground transition-all duration-300 ease-out hover:bg-white/60 hover:text-foreground hover:shadow-xl dark:hover:bg-white/5"
             title="Notifications"
             aria-label="Notifications"
           >

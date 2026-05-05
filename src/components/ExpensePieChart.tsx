@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 
 const COLORS = ["#7c5cff", "#32b8f1", "#2ee0a5", "#ffbd4a", "#ff5b7a", "#94a3b8", "#f472b6"];
@@ -69,12 +69,12 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3, duration: 0.45 }}
     >
-    <Card className="glow-shell min-h-[190px] rounded-2xl border border-white/10 bg-card/60 py-5 shadow-card backdrop-blur-xl">
-      <CardHeader className="px-8">
-        <CardTitle className="text-lg font-semibold">Spending by Category</CardTitle>
+    <GlassCard className="min-h-[190px] p-6">
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold gradient-text">Spending by Category</h3>
         <p className="text-sm font-normal text-muted-foreground">This month</p>
-      </CardHeader>
-      <CardContent className="px-8">
+      </div>
+      <div>
         {loading ? (
           <div className="flex h-[340px] items-center justify-center text-muted-foreground">Loading chart...</div>
         ) : data.length === 0 ? (
@@ -92,7 +92,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                     outerRadius={120}
                     paddingAngle={3}
                     dataKey="value"
-                    stroke="hsl(var(--background))"
+                    stroke="rgb(var(--background))"
                     strokeWidth={3}
                   >
                     {data.map((_, index) => (
@@ -102,7 +102,7 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
                   <Tooltip
                     contentStyle={{
                       background: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
+                      border: "1px solid rgb(var(--border))",
                       borderRadius: "8px",
                       color: "hsl(var(--popover-foreground))",
                     }}
@@ -130,8 +130,8 @@ export default function ExpensePieChart({ refresh }: { refresh: boolean }) {
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </GlassCard>
     </motion.div>
   );
 }
