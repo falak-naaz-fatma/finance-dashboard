@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
-import { Lightbulb, TrendingDown, TrendingUp } from "lucide-react";
+import { Lightbulb, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Transaction = {
@@ -42,19 +42,21 @@ function label(category: string) {
 
 export default function SmartInsights({ transactions, refresh }: Props) {
   const { data: session } = useSession();
-  const [remoteTransactions, setRemoteTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(!transactions);
+  const [insights, setInsights] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (transactions) return;
-
-    const fetchTransactions = async () => {
+    const fetchInsights = async () => {
       setLoading(true);
       try {
         const userId = (session?.user as { id?: string })?.id;
-        if (!userId) return;
-        const res = await fetch(`/api/transactions?userId=${userId}`);
-        setRemoteTransactions((await res.json()) as Transaction[]);
+        if (!userId) {
+          setInsights([]);
+          return;
+        }
+        const res = await fetch(`/api/insights?userId=${userId}`);
+        const data = (await res.json()) as { insights?: string[] };
+        setInsights(data.insights || []);
       } catch (error) {
         console.error("Error fetching insights:", error);
       } finally {
@@ -62,11 +64,18 @@ export default function SmartInsights({ transactions, refresh }: Props) {
       }
     };
 
-    if (session) fetchTransactions();
-  }, [session, transactions, refresh]);
+    if (session) {
+      fetchInsights();
+      return;
+    }
 
-  const insights = useMemo(() => {
-    const data = transactions ?? remoteTransactions;
+    setLoading(false);
+  }, [session, refresh]);
+
+  const localInsights = useMemo(() => {
+    const data = transactions;
+    if (!data) return [];
+
     const currentStart = monthStart(0);
     const nextStart = monthStart(1);
     const previousStart = monthStart(-1);
@@ -103,7 +112,9 @@ export default function SmartInsights({ transactions, refresh }: Props) {
         ? `Your current savings rate is ${savingsRate}%.`
         : "Income coverage is tight this month. Watch discretionary expenses.",
     ];
-  }, [remoteTransactions, transactions]);
+  }, [transactions]);
+
+  const visibleInsights = insights.length > 0 ? insights : localInsights;
 
   return (
     <motion.div
@@ -124,24 +135,31 @@ export default function SmartInsights({ transactions, refresh }: Props) {
         <CardContent className="grid gap-3 px-6 md:grid-cols-3">
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <Skeleton height={18} baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
-                  <Skeleton height={14} width="70%" baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
-                </div>
-              ))
-            : insights.map((insight, index) => {
-                const Icon = index === 1 && insight.includes("lower") ? TrendingDown : TrendingUp;
-                return (
-                  <motion.div
-                    key={insight}
-                    whileHover={{ y: -3 }}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-4"
-                  >
+              <div key={index} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <Skeleton height={18} baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
+                <Skeleton height={14} width="70%" baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
+              </div>
+            ))
+            : visibleInsights.map((insight, index) => {
+              const Icon = index === 1 && insight.includes("lower") ? TrendingDown : TrendingUp;
+              return (
+                <motion.div
+                  key={insight}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.15 }}
+                  whileHover={{ y: -3 }}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                >
+                  {index === 0 ? (
+                    <Sparkles className="mb-3 size-5 text-primary" />
+                  ) : (
                     <Icon className={`mb-3 size-5 ${index === 1 && insight.includes("higher") ? "text-expense" : "text-income"}`} />
-                    <p className="text-sm font-medium leading-6 text-foreground">{insight}</p>
-                  </motion.div>
-                );
-              })}
+                  )}
+                  <p className="text-sm font-medium leading-6 text-foreground">{insight}</p>
+                </motion.div>
+              );
+            })}
         </CardContent>
       </Card>
     </motion.div>
