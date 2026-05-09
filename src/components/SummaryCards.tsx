@@ -150,10 +150,10 @@ export default function SummaryCards({ refresh, selectedMonth }: Props) {
                   <div
                     className="size-20 rounded-full"
                     style={{
-                      background: `conic-gradient(hsl(var(--primary)) ${Math.min(card.ring, 100) * 3.6}deg, hsl(var(--card)) 0deg)`,
+                      background: `conic-gradient(hsl(var(--primary)) ${Math.min(card.ring, 100) * 3.6}deg, hsl(var(--muted)) 0deg)`,
                     }}
                   >
-                    <div className="m-2 size-16 rounded-full bg-background/80 backdrop-blur" />
+                    <div className="m-2 size-16 rounded-full bg-card" />
                   </div>
                 </div>
               ) : (
