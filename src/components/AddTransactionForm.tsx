@@ -72,6 +72,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const [pickerView, setPickerView] = useState<"none" | "month" | "year">("none");
   const [openCalendar, setOpenCalendar] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -88,6 +89,11 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
     const handleClick = (event: MouseEvent) => {
       if (!dropdownRef.current?.contains(event.target as Node)) {
         setOpen(false);
+      }
+
+      if (!calendarRef.current?.contains(event.target as Node)) {
+        setOpenCalendar(false);
+        setPickerView("none");
       }
     };
 
@@ -258,10 +264,10 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
             {/* Date */}
             <div className="space-y-2">
               <Label className="text-base font-semibold text-foreground">Date</Label>
-              <div className="relative">
+              <div className="relative" ref={calendarRef}>
                 <button
                   type="button"
-                  onClick={() => setOpenCalendar(!openCalendar)}
+                  onClick={() => setOpenCalendar((prev) => !prev)}
                   className="
                     w-full h-12 flex items-center justify-between
                     rounded-xl border border-white/10
