@@ -51,8 +51,8 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3, active: true },
-  { label: "Budget", href: "/budget", icon: Target },
-  { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
+  // { label: "Budget", href: "/budget", icon: Target },
+  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 const categoryIcon: Record<string, string> = {

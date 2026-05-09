@@ -10,8 +10,8 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: Search, active: true },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  { label: "Budget", href: "/budget", icon: Target },
-  { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
+  // { label: "Budget", href: "/budget", icon: Target },
+  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 function getInitials(name?: string | null, email?: string | null) {
