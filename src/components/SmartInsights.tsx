@@ -135,7 +135,7 @@ export default function SmartInsights({ transactions, refresh }: Props) {
         <CardContent className="grid gap-3 px-6 md:grid-cols-3">
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={index} className="rounded-2xl border border-border bg-card p-4 shadow-sm">
                 <Skeleton height={18} baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
                 <Skeleton height={14} width="70%" baseColor="hsl(var(--muted))" highlightColor="hsl(var(--accent))" />
               </div>
@@ -149,7 +149,7 @@ export default function SmartInsights({ transactions, refresh }: Props) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.15 }}
                   whileHover={{ y: -3 }}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  className="rounded-2xl border border-border bg-card p-4 shadow-sm"
                 >
                   {index === 0 ? (
                     <Sparkles className="mb-3 size-5 text-primary" />

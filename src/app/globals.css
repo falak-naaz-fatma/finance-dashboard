@@ -59,7 +59,7 @@
   }
 
   .light {
-    --background: 240 20% 98%;
+    --background: 240 20% 95%;
     --foreground: 240 14% 10%;
     --card: 0 0% 100%;
     --card-foreground: 240 14% 10%;
@@ -87,7 +87,9 @@
     --ring: 250 85% 60%;
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100% / 0.92), hsl(240 20% 99% / 0.82));
     --gradient-bg: radial-gradient(ellipse at top, hsl(250 50% 95%) 0%, hsl(240 20% 98%) 60%);
-    --shadow-card: 0 20px 70px -42px hsl(240 30% 35% / 0.28);
+    --shadow-card:
+      0 4px 24px -4px hsl(240 30% 50% / 0.18),
+      0 1px 4px 0 hsl(240 30% 50% / 0.10);
     --shadow-glow: 0 0 40px -10px hsl(250 85% 60% / 0.15);
     --shadow-elevated: 0 20px 60px -20px hsl(250 85% 50% / 0.16);
     --sidebar: 0 0% 100% / 0.78;
@@ -140,6 +142,13 @@
     border-radius: var(--radius);
   }
 
+  .light .glass-card {
+    background: hsl(var(--card));
+    box-shadow:
+      0 2px 16px -4px hsl(240 30% 40% / 0.15),
+      0 1px 4px 0 hsl(240 30% 40% / 0.08);
+  }
+
   .glass-panel {
     @apply rounded-2xl border border-border/10 bg-card/60 shadow-card backdrop-blur-xl;
   }
@@ -189,5 +198,16 @@
   }
   .shadow-glow {
     box-shadow: var(--shadow-glow);
+  }
+
+  /* Light mode sidebar and header separators */
+  .light aside {
+    background: hsl(0 0% 98%) !important;
+    border-right: 1px solid hsl(240 10% 90%) !important;
+  }
+
+  .light header {
+    /* background: hsl(0 0% 98% / 0.9) !important; */
+    border-bottom: 1px solid hsl(240 10% 90%) !important;
   }
 }
