@@ -20,6 +20,8 @@ import {
   Film,
   Wallet,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +42,7 @@ const incomeCategories = ["Salary", "Freelance", "Business", "Investment", "Othe
 const expenseCategories = ["Food", "Travel", "Shopping", "Bills", "Health", "Education", "Entertainment", "Other"];
 
 // 🔥 Category → Icon map
-const categoryIcons: Record<string, any> = {
+const categoryIcons: Record<string, LucideIcon> = {
   food: Utensils,
   travel: Plane,
   shopping: ShoppingBag,
@@ -65,6 +67,9 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const [selectedType, setSelectedType] = useState<"income" | "expense">("expense");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [openCalendar, setOpenCalendar] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -156,10 +161,10 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                     setOpen(false);
                   }}
                   className={`h-11 rounded-[12px] text-base font-semibold capitalize transition ${selectedType === type
-                      ? type === "income"
-                        ? "bg-income text-background"
-                        : "bg-expense text-white"
-                      : "text-muted-foreground hover:text-foreground"
+                    ? type === "income"
+                      ? "bg-income text-background"
+                      : "bg-expense text-white"
+                    : "text-muted-foreground hover:text-foreground"
                     }`}
                 >
                   {type}
@@ -211,8 +216,8 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                               setOpen(false);
                             }}
                             className={`flex w-full items-center gap-2 px-4 py-3 text-sm transition ${active
-                                ? "bg-primary/15 text-primary"
-                                : "text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                              ? "bg-primary/15 text-primary"
+                              : "text-muted-foreground hover:bg-white/10 hover:text-foreground"
                               }`}
                           >
                             <Icon className="size-4 text-muted-foreground" />
@@ -250,7 +255,144 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
             />
 
             {/* Date */}
-            <Input type="date" {...register("date")} />
+            <div className="space-y-2">
+              <Label className="text-base font-semibold text-foreground">Date</Label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setOpenCalendar(!openCalendar)}
+                  className="
+                    w-full h-12 flex items-center justify-between
+                    rounded-xl border border-white/10
+                    bg-white/5 px-4 text-sm text-foreground
+                  "
+                >
+                  <span>
+                    {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Select date"}
+                  </span>
+
+                  <CalendarDays className="size-4 text-muted-foreground" />
+                </button>
+
+                {openCalendar && (
+                  <div className="absolute right-0 bottom-full z-50 mb-2 w-[300px] rounded-2xl border border-border bg-card p-4 shadow-2xl">
+                    <div className="mb-4 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const date = new Date(calendarMonth);
+                          date.setMonth(date.getMonth() - 1);
+                          setCalendarMonth(date);
+                        }}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      >
+                        ‹
+                      </button>
+
+                      <span className="text-sm font-semibold text-foreground">
+                        {calendarMonth.toLocaleString("en-IN", {
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const date = new Date(calendarMonth);
+                          date.setMonth(date.getMonth() + 1);
+                          setCalendarMonth(date);
+                        }}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      >
+                        ›
+                      </button>
+                    </div>
+
+                    <div className="mb-2 grid grid-cols-7">
+                      {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                        <div key={day} className="py-1 text-center text-xs font-semibold text-muted-foreground">
+                          {day}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-y-1">
+                      {(() => {
+                        const year = calendarMonth.getFullYear();
+                        const month = calendarMonth.getMonth();
+                        const firstDay = new Date(year, month, 1).getDay();
+                        const daysInMonth = new Date(year, month + 1, 0).getDate();
+                        const today = new Date();
+                        const cells = [];
+
+                        for (let i = 0; i < firstDay; i++) {
+                          cells.push(<div key={`empty-${i}`} />);
+                        }
+
+                        for (let day = 1; day <= daysInMonth; day++) {
+                          const date = new Date(year, month, day);
+                          const isSelected =
+                            selectedDate &&
+                            selectedDate.getDate() === day &&
+                            selectedDate.getMonth() === month &&
+                            selectedDate.getFullYear() === year;
+                          const isToday =
+                            today.getDate() === day &&
+                            today.getMonth() === month &&
+                            today.getFullYear() === year;
+
+                          cells.push(
+                            <button
+                              key={day}
+                              type="button"
+                              onClick={() => {
+                                setSelectedDate(date);
+                                setValue("date", format(date, "yyyy-MM-dd"));
+                                setOpenCalendar(false);
+                              }}
+                              className={`
+                                flex h-9 w-full items-center justify-center rounded-xl
+                                text-sm font-medium transition-all
+                                ${isSelected
+                                  ? "scale-105 bg-primary text-primary-foreground shadow-md"
+                                  : isToday
+                                    ? "border border-primary font-bold text-primary"
+                                    : "text-foreground hover:bg-accent hover:text-foreground"
+                                }
+                              `}
+                            >
+                              {day}
+                            </button>,
+                          );
+                        }
+
+                        return cells;
+                      })()}
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+                      <span className="text-xs text-muted-foreground">
+                        {selectedDate ? format(selectedDate, "dd MMM yyyy") : "No date selected"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const today = new Date();
+                          setSelectedDate(today);
+                          setCalendarMonth(today);
+                          setValue("date", format(today, "yyyy-MM-dd"));
+                          setOpenCalendar(false);
+                        }}
+                        className="text-xs font-semibold text-primary transition-colors hover:text-primary/80"
+                      >
+                        Today
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Submit */}
             <Button type="submit" disabled={loading} className="h-14 rounded-xl bg-gradient-fintech text-white">
