@@ -69,6 +69,7 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [pickerView, setPickerView] = useState<"none" | "month" | "year">("none");
   const [openCalendar, setOpenCalendar] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -275,8 +276,8 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                 </button>
 
                 {openCalendar && (
-                  <div className="absolute right-0 bottom-full z-50 mb-2 w-[300px] rounded-2xl border border-border bg-card p-4 shadow-2xl">
-                    <div className="mb-4 flex items-center justify-between">
+                  <div className="calendar-picker absolute right-0 bottom-full z-50 mb-2 w-[300px] rounded-2xl border border-border bg-card p-4 shadow-2xl outline-none">
+                    <div className="relative mb-4 flex items-center justify-between">
                       <button
                         type="button"
                         onClick={() => {
@@ -284,17 +285,21 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                           date.setMonth(date.getMonth() - 1);
                           setCalendarMonth(date);
                         }}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:outline-none"
                       >
                         ‹
                       </button>
 
-                      <span className="text-sm font-semibold text-foreground">
+                      <button
+                        type="button"
+                        onClick={() => setPickerView((view) => (view === "none" ? "month" : "none"))}
+                        className="text-sm font-semibold text-foreground transition-colors hover:text-primary focus:outline-none"
+                      >
                         {calendarMonth.toLocaleString("en-IN", {
                           month: "long",
                           year: "numeric",
                         })}
-                      </span>
+                      </button>
 
                       <button
                         type="button"
@@ -303,10 +308,104 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                           date.setMonth(date.getMonth() + 1);
                           setCalendarMonth(date);
                         }}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:outline-none"
                       >
                         ›
                       </button>
+
+                      {pickerView !== "none" && (
+                        <div className="calendar-picker absolute left-1/2 top-10 z-50 w-[220px] -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-card shadow-xl">
+                          {pickerView === "month" && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setPickerView("year")}
+                                className="flex w-full items-center justify-between border-b border-border bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary/15 focus:outline-none"
+                              >
+                                <span>{calendarMonth.getFullYear()}</span>
+                                <span className="text-xs opacity-60">tap to change ›</span>
+                              </button>
+
+                              <div className="grid grid-cols-3 gap-1 p-2">
+                                {[
+                                  "Jan",
+                                  "Feb",
+                                  "Mar",
+                                  "Apr",
+                                  "May",
+                                  "Jun",
+                                  "Jul",
+                                  "Aug",
+                                  "Sep",
+                                  "Oct",
+                                  "Nov",
+                                  "Dec",
+                                ].map((month, index) => {
+                                  const isSelected = calendarMonth.getMonth() === index;
+
+                                  return (
+                                    <button
+                                      key={month}
+                                      type="button"
+                                      onClick={() => {
+                                        const date = new Date(calendarMonth);
+                                        date.setMonth(index);
+                                        setCalendarMonth(date);
+                                        setPickerView("none");
+                                      }}
+                                      className={`rounded-lg py-2.5 text-sm font-medium transition-colors focus:outline-none ${isSelected
+                                        ? "bg-primary text-primary-foreground"
+                                        : "text-foreground hover:bg-accent"
+                                        }`}
+                                    >
+                                      {month}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
+
+                          {pickerView === "year" && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setPickerView("month")}
+                                className="flex w-full items-center gap-2 border-b border-border bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary/15 focus:outline-none"
+                              >
+                                <span>‹</span>
+                                <span>Select Year</span>
+                              </button>
+
+                              <div className="max-h-52 overflow-y-auto">
+                                {Array.from({ length: 30 }, (_, index) => new Date().getFullYear() - index)
+                                  .map((year) => {
+                                    const isSelected = calendarMonth.getFullYear() === year;
+
+                                    return (
+                                      <button
+                                        key={year}
+                                        type="button"
+                                        onClick={() => {
+                                          const date = new Date(calendarMonth);
+                                          date.setFullYear(year);
+                                          setCalendarMonth(date);
+                                          setPickerView("month");
+                                        }}
+                                        className={`w-full px-4 py-2.5 text-left text-sm transition-colors focus:outline-none ${isSelected
+                                          ? "bg-primary font-semibold text-primary-foreground"
+                                          : "text-foreground hover:bg-accent"
+                                          }`}
+                                      >
+                                        {year}
+                                      </button>
+                                    );
+                                  })}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-2 grid grid-cols-7">
@@ -350,10 +449,12 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                                 setSelectedDate(date);
                                 setValue("date", format(date, "yyyy-MM-dd"));
                                 setOpenCalendar(false);
+                                setPickerView("none");
                               }}
                               className={`
                                 flex h-9 w-full items-center justify-center rounded-xl
                                 text-sm font-medium transition-all
+                                focus:outline-none
                                 ${isSelected
                                   ? "scale-105 bg-primary text-primary-foreground shadow-md"
                                   : isToday
@@ -383,8 +484,9 @@ export default function AddTransactionForm({ onSuccess }: { onSuccess?: () => vo
                           setCalendarMonth(today);
                           setValue("date", format(today, "yyyy-MM-dd"));
                           setOpenCalendar(false);
+                          setPickerView("none");
                         }}
-                        className="text-xs font-semibold text-primary transition-colors hover:text-primary/80"
+                        className="text-xs font-semibold text-primary transition-colors hover:text-primary/80 focus:outline-none"
                       >
                         Today
                       </button>

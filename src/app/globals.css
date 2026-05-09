@@ -37,7 +37,7 @@
     --info-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 100%;
+    --border: 222 35% 22%;
     --input: 0 0% 100%;
     --ring: 250 100% 68%;
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100% / 0.07), hsl(0 0% 100% / 0.035));
@@ -126,6 +126,11 @@
 }
 
 @layer components {
+  .calendar-picker button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
   .glass-card {
     position: relative;
     background: var(--gradient-card);
