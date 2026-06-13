@@ -1,5 +1,5 @@
 {
-  "name": "finance-dashboard",
+  "name": "spendly",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -20,6 +21,7 @@
     "next": "16.2.4",
     "next-auth": "^4.24.14",
     "next-themes": "^0.4.6",
+    "nodemailer": "^7.0.13",
     "radix-ui": "^1.4.3",
     "react": "19.2.4",
     "react-day-picker": "^9.14.0",
@@ -33,7 +35,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.5.0",

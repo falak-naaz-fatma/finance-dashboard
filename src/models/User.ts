@@ -3,10 +3,12 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface IUser extends Document {
     email: string;
     password?: string; // Make password optional for OAuth users
-    name?: string;
+    name: string;
     provider?: string; // e.g., 'google'
     providerId?: string; // Google's user ID
     image?: string; // User profile image URL from Google
+    resetToken?: string;
+    resetTokenExpiry?: Date;
 }
 
 const UserSchema: Schema = new Schema({
@@ -23,6 +25,7 @@ const UserSchema: Schema = new Schema({
     },
     name: {
         type: String,
+        required: true,
         trim: true,
     },
     provider: {
@@ -35,6 +38,14 @@ const UserSchema: Schema = new Schema({
     },
     image: {
         type: String,
+        required: false,
+    },
+    resetToken: {
+        type: String,
+        required: false,
+    },
+    resetTokenExpiry: {
+        type: Date,
         required: false,
     },
 }, {

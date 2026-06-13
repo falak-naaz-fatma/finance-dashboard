@@ -6,8 +6,6 @@ import {
   BarChart3,
   ClipboardList,
   LayoutDashboard,
-  PiggyBank,
-  Target,
 } from "lucide-react";
 import AddTransactionForm from "@/components/AddTransactionForm";
 import TransactionList from "@/components/TransactionList";
@@ -22,12 +20,10 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: true },
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  // { label: "Budget", href: "/budget", icon: Target },
-  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 function getInitials(name?: string | null, email?: string | null) {
-  const source = name || email || "Aarav Sharma";
+  const source = name || email || "";
   return source
     .split(/[^\w]+/)
     .filter(Boolean)
@@ -42,9 +38,18 @@ export default function DashboardPage() {
   const [selectedMonth] = useState("");
 
   const handleSuccess = () => setRefresh((prev) => !prev);
-  const userName = session?.user?.name || "Aarav Sharma";
-  const userEmail = session?.user?.email || "aarav@fintrack.io";
-  const initials = getInitials(userName, userEmail) || "AS";
+  // Show loading state while session is being fetched
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userName = session.user?.name || "";
+  const userEmail = session.user?.email || "";
+  const initials = getInitials(userName, userEmail) || "";
 
   return (
     <div className="min-h-screen bg-background text-foreground">

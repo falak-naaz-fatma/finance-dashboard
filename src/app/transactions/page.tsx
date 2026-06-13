@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import { BarChart3, LayoutDashboard, PiggyBank, Search, Target } from "lucide-react";
+import { BarChart3, LayoutDashboard, Search } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import TransactionTable from "@/components/TransactionTable";
@@ -10,12 +10,10 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: Search, active: true },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  // { label: "Budget", href: "/budget", icon: Target },
-  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 function getInitials(name?: string | null, email?: string | null) {
-  const source = name || email || "Aarav Sharma";
+  const source = name || email || "";
   return source
     .split(/[^\w]+/)
     .filter(Boolean)
@@ -29,9 +27,18 @@ export default function TransactionsPage() {
   const refresh = false;
   const selectedMonth = "";
 
-  const userName = session?.user?.name || "Aarav Sharma";
-  const userEmail = session?.user?.email || "aarav@fintrack.io";
-  const initials = getInitials(userName, userEmail) || "AS";
+  // Show loading state while session is being fetched
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userName = session.user?.name || "";
+  const userEmail = session.user?.email || "";
+  const initials = getInitials(userName, userEmail) || "";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
