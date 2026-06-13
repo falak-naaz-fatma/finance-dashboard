@@ -1,11 +1,14 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import Providers from "./providers";
 
-export const metadata: Metadata = {
-  title: "FinTrack",
-  description: "Personal finance dashboard",
+export const metadata = {
+  title: "Spendly",
+  description: "Smart spending tracker — track income, expenses and financial goals",
+  icons: {
+    icon: "/logo.jpg",
+    apple: "/logo.jpg",
+  },
 };
 
 export default function RootLayout({

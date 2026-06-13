@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, Eye, EyeOff, WalletCards } from "lucide-react";
+import { CheckCircle, Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
     return (
@@ -74,11 +74,13 @@ function ResetPasswordForm() {
         <div className="min-h-screen flex items-center justify-center bg-background px-4 py-10">
             <div className="w-full max-w-md px-8 py-10 rounded-2xl border border-border bg-card shadow-card flex flex-col gap-6">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-glow">
-                        <WalletCards className="w-7 h-7 text-white" />
-                    </div>
+                    <img
+                        src="/logo.jpg"
+                        alt="Spendly"
+                        className="w-14 h-14 rounded-2xl object-cover"
+                    />
                     <div className="text-center">
-                        <h1 className="text-2xl font-bold">FinTrack</h1>
+                        <h1 className="text-2xl font-bold">Spendly</h1>
                         <p className="text-sm text-muted-foreground mt-1">Create new password</p>
                     </div>
                 </div>

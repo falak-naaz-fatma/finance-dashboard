@@ -81,7 +81,12 @@ function LoginForm() {
         <div className="min-h-screen flex items-center justify-center bg-[#07080d] text-white">
             <Card className="w-full max-w-md shadow-lg border border-white/10 bg-[#0b0c12]">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold text-white">Finance Dashboard</CardTitle>
+                    <img
+                        src="/logo.jpg"
+                        alt="Spendly"
+                        className="mx-auto mb-3 w-14 h-14 rounded-2xl object-cover"
+                    />
+                    <CardTitle className="text-2xl font-bold text-white">Spendly</CardTitle>
                     <CardDescription className="text-zinc-400">Track your income and expenses easily</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
