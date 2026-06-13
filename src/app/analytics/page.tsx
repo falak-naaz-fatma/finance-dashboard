@@ -7,8 +7,6 @@ import {
   CalendarDays,
   ClipboardList,
   LayoutDashboard,
-  PiggyBank,
-  Target,
   TrendingUp,
   WalletCards,
 } from "lucide-react";
@@ -51,8 +49,6 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3, active: true },
-  // { label: "Budget", href: "/budget", icon: Target },
-  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 const categoryIcon: Record<string, string> = {
@@ -68,7 +64,7 @@ const categoryIcon: Record<string, string> = {
 };
 
 function getInitials(name?: string | null, email?: string | null) {
-  const source = name || email || "Aarav Sharma";
+  const source = name || email || "";
   return source
     .split(/[^\w]+/)
     .filter(Boolean)
@@ -142,9 +138,18 @@ export default function AnalyticsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const userName = session?.user?.name || "Aarav Sharma";
-  const userEmail = session?.user?.email || "aarav@fintrack.io";
-  const initials = getInitials(userName, userEmail) || "AS";
+  // Show loading state while session is being fetched
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userName = session.user?.name || "";
+  const userEmail = session.user?.email || "";
+  const initials = getInitials(userName, userEmail) || "";
 
   useEffect(() => {
     const fetchTransactions = async () => {

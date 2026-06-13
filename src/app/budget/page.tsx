@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 import {
   BarChart3,
   ClipboardList,
   LayoutDashboard,
-  PiggyBank,
-  Search,
-  Target,
-  WalletCards,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -35,8 +30,6 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  // { label: "Budget", href: "/budget", icon: Target, active: true },
-  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank },
 ];
 
 const budgets: BudgetItem[] = [];
@@ -52,7 +45,7 @@ const categoryIcon: Record<string, string> = {
 };
 
 function getInitials(name?: string | null, email?: string | null) {
-  const source = name || email || "Aarav Sharma";
+  const source = name || email || "";
   return source
     .split(/[^\w]+/)
     .filter(Boolean)
@@ -73,9 +66,18 @@ export default function BudgetPage() {
   const { data: session } = useSession();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  const userName = session?.user?.name || "Aarav Sharma";
-  const userEmail = session?.user?.email || "aarav@fintrack.io";
-  const initials = getInitials(userName, userEmail) || "AS";
+  // Show loading state while session is being fetched
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userName = session.user?.name || "";
+  const userEmail = session.user?.email || "";
+  const initials = getInitials(userName, userEmail) || "";
 
   useEffect(() => {
     const fetchTransactions = async () => {

@@ -1,8 +1,8 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,19 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#07080d]" />}>
+            <LoginForm />
+        </Suspense>
+    );
+}
+
+function LoginForm() {
     const { data: session } = useSession();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [error, setError] = useState<string | null>(null);
+    const registered = searchParams.get("registered") === "true";
 
     const {
         register,
@@ -42,7 +52,7 @@ export default function LoginPage() {
     // If already logged in, go to dashboard
     useEffect(() => {
         if (session) router.push("/dashboard");
-    }, [session]);
+    }, [router, session]);
 
     const onSubmit = async (data: LoginFormValues) => {
         setError(null);
@@ -58,6 +68,8 @@ export default function LoginPage() {
                 setError("Invalid email or password");
             } else if (result?.url) {
                 router.push(result.url);
+            } else {
+                router.push("/dashboard");
             }
         } catch (err) {
             setError("An error occurred during login");
@@ -69,7 +81,12 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-[#07080d] text-white">
             <Card className="w-full max-w-md shadow-lg border border-white/10 bg-[#0b0c12]">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold text-white">Finance Dashboard</CardTitle>
+                    <img
+                        src="/logo.jpg"
+                        alt="Spendly"
+                        className="mx-auto mb-3 w-14 h-14 rounded-2xl object-cover"
+                    />
+                    <CardTitle className="text-2xl font-bold text-white">Spendly</CardTitle>
                     <CardDescription className="text-zinc-400">Track your income and expenses easily</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
@@ -93,7 +110,7 @@ export default function LoginPage() {
                             <Input
                                 id="password"
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder="********"
                                 {...register("password")}
                                 className={`h-10 rounded-xl border border-white/10 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-zinc-400 focus:border-[#8b5cf6]/70 focus:ring-4 focus:ring-[#8b5cf6]/10 ${errors.password ? "border-red-500" : ""}`}
                             />
@@ -109,18 +126,21 @@ export default function LoginPage() {
                                     Remember me
                                 </Label>
                             </div>
-                            <Button
-                                variant="link"
-                                type="button"
-                                className="text-sm text-[#8b5cf6] hover:text-[#a78bfa]"
-                                onClick={() => router.push("/forgot-password")}
+                            <Link
+                                href="/forgot-password"
+                                className="text-sm text-primary hover:underline"
                             >
                                 Forgot password?
-                            </Button>
+                            </Link>
                         </div>
 
                         {error && (
                             <p className="text-sm text-red-400 text-center">{error}</p>
+                        )}
+                        {registered && !error && (
+                            <p className="text-sm text-emerald-400 text-center">
+                                Account created successfully. Please sign in.
+                            </p>
                         )}
 
                         <Button
@@ -133,8 +153,8 @@ export default function LoginPage() {
                     </form>
 
                     <p className="mt-4 text-center text-sm text-zinc-400">
-                        Don't have an account?{" "}
-                        <Link href="/register" className="font-medium text-[#8b5cf6] hover:underline">
+                        Don&apos;t have an account?{" "}
+                        <Link href="/signup" className="text-primary font-semibold hover:underline">
                             Sign Up
                         </Link>
                     </p>
@@ -149,7 +169,7 @@ export default function LoginPage() {
                     </div>
 
                     <Button
-                        onClick={() => signIn("google")}
+                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                         className="w-full h-10 flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] text-white hover:bg-white/10 transition"
                         variant="outline"
                     >

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { WalletCards } from "lucide-react";
 
 type NavItem = {
     label: string;
@@ -21,12 +20,14 @@ export default function Sidebar({ navItems }: SidebarProps) {
         <>
             <aside className="fixed inset-y-0 left-0 z-30 hidden w-[280px] border-r border-white/10 bg-white/5 backdrop-blur-xl lg:flex lg:flex-col">
                 <div className="flex items-center gap-3 px-7 py-8">
-                    <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-fintech text-white shadow-glow">
-                        <WalletCards className="size-5" />
-                    </div>
+                    <img
+                        src="/logo.jpg"
+                        alt="Spendly"
+                        className="h-10 w-10 rounded-xl object-cover"
+                    />
                     <div>
-                        <p className="text-base font-bold leading-tight tracking-tight text-foreground">FinTrack</p>
-                        <p className="text-sm text-muted-foreground">Personal Finance</p>
+                        <p className="text-base font-bold leading-tight tracking-tight text-foreground">Spendly</p>
+                        <p className="text-sm text-muted-foreground">Smart Spending</p>
                     </div>
                 </div>
 

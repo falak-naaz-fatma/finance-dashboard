@@ -1,21 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useState, type ComponentType, type FormEvent } from "react";
 import {
   BarChart3,
   ClipboardList,
-  Home,
   LayoutDashboard,
-  PiggyBank,
-  Plane,
   Plus,
-  Search,
-  Shield,
-  Smartphone,
-  Target,
-  WalletCards,
   X,
 } from "lucide-react";
 import Header from "@/components/Header";
@@ -26,8 +17,6 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Transactions", href: "/transactions", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  // { label: "Budget", href: "/budget", icon: Target },
-  // { label: "Savings Goals", href: "/savings-goals", icon: PiggyBank, active: true },
 ];
 
 type Goal = {
@@ -43,7 +32,7 @@ type Goal = {
 const goals: Goal[] = [];
 
 function getInitials(name?: string | null, email?: string | null) {
-  const source = name || email || "Aarav Sharma";
+  const source = name || email || "";
   return source
     .split(/[^\w]+/)
     .filter(Boolean)
@@ -154,9 +143,18 @@ export default function SavingsGoalsPage() {
   const [goalName, setGoalName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
 
-  const userName = session?.user?.name || "Aarav Sharma";
-  const userEmail = session?.user?.email || "aarav@fintrack.io";
-  const initials = getInitials(userName, userEmail) || "AS";
+  // Show loading state while session is being fetched
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userName = session.user?.name || "";
+  const userEmail = session.user?.email || "";
+  const initials = getInitials(userName, userEmail) || "";
 
   function resetCreateForm() {
     setEmoji("\uD83C\uDFAF");
